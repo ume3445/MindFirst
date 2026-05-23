@@ -1,0 +1,382 @@
+/* ─── MindFirst Desktop · Dashboard ──────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0f0d09;
+  --surface:   #18160e;
+  --card:      #211e13;
+  --border:    rgba(255,255,255,0.07);
+  --amber:     #d4a843;
+  --amber-d:   #b8891a;
+  --green:     #5a9e78;
+  --terra:     #c4634a;
+  --text:      #f0e6cc;
+  --muted:     #7a6b50;
+  --subtle:    #a8906e;
+  --radius:    12px;
+  --font:      -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html, body {
+  width: 360px;
+  height: 560px;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* ── Header ── */
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  -webkit-app-region: drag;
+}
+
+.logo {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--amber);
+  letter-spacing: -0.01em;
+}
+
+#close-btn {
+  -webkit-app-region: no-drag;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 5px;
+  transition: color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+#close-btn:hover { color: var(--text); background: rgba(255,255,255,0.07); }
+
+/* ── Tab bar ── */
+#tab-bar {
+  display: flex;
+  gap: 0;
+  padding: 8px 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab:hover { color: var(--subtle); }
+.tab.active {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
+}
+
+/* ── Tab content ── */
+.tab-content { display: none; padding: 16px; height: calc(560px - 92px); overflow-y: auto; }
+.tab-content.active { display: block; }
+
+/* scrollbar */
+.tab-content::-webkit-scrollbar { width: 4px; }
+.tab-content::-webkit-scrollbar-track { background: transparent; }
+.tab-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* ── TODAY TAB ── */
+
+#today-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid rgba(212,168,67,0.15);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+
+#today-total-wrap { display: flex; flex-direction: column; gap: 3px; }
+
+#today-total {
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--amber), #e8c060);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#today-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Ring */
+#today-limit-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+#limit-ring {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#ring-svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.ring-bg   { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 4; }
+.ring-fill {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 113; /* 2π×18 */
+  stroke-dashoffset: 113;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1), stroke 0.4s;
+}
+.ring-fill.ring-warn   { stroke: #f59e0b; }
+.ring-fill.ring-danger { stroke: var(--terra); }
+
+#ring-pct {
+  position: relative;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+  z-index: 1;
+}
+
+#ring-label { font-size: 9px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Section title */
+.section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* App list */
+#app-list { display: flex; flex-direction: column; gap: 6px; }
+
+#no-activity {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 10px 0;
+}
+
+.app-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.app-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.app-bar-wrap {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.app-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--amber-d), var(--amber));
+  transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+.app-time {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--amber);
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── WEEK TAB ── */
+#week-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  padding: 0 4px 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.week-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.week-bar {
+  width: 100%;
+  background: linear-gradient(180deg, var(--amber), var(--amber-d));
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+.week-day-label {
+  font-size: 9px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.week-day-label.today { color: var(--amber); }
+
+#week-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.week-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--subtle);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.week-total-row:last-child { border-bottom: none; }
+.week-total-row .wt-label { font-weight: 700; color: var(--text); }
+.week-total-row .wt-val   { color: var(--amber); font-weight: 700; }
+
+/* ── SETTINGS TAB ── */
+.settings-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.settings-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.settings-desc {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.limit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#limit-input {
+  width: 70px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212,168,67,0.25);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  font-family: inherit;
+  outline: none;
+  text-align: center;
+}
+#limit-input:focus { border-color: rgba(212,168,67,0.6); }
+
+.limit-unit {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+#save-limit-btn {
+  margin-left: auto;
+  background: linear-gradient(135deg, var(--amber-d), var(--amber));
+  border: none;
+  border-radius: 7px;
+  color: #0f0d09;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 7px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+#save-limit-btn:hover { opacity: 0.85; }
+
+#save-status {
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 600;
+  margin-top: 8px;
+  min-height: 16px;
+}
+
+#tracked-apps-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.app-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: rgba(212,168,67,0.1);
+  border: 1px solid rgba(212,168,67,0.2);
+  color: var(--amber);
+}
+.app-tag-dim {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border);
+  color: var(--muted);
+}

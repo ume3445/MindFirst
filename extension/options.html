@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Try First — Settings</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f0d08;
+      color: #f0e6cc;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 48px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 800;
+      color: #d4a843;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #a8906e;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: #17150b;
+      border: 1px solid rgba(212,168,67,0.15);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #d4a843;
+      margin-bottom: 12px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #a8906e;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .card-desc a {
+      color: #d4a843;
+      text-decoration: none;
+    }
+    .card-desc a:hover { text-decoration: underline; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c8b898;
+      margin-bottom: 8px;
+    }
+
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(212,168,67,0.2);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #f0e6cc;
+      outline: none;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: rgba(212,168,67,0.5); }
+    input::placeholder { color: #7a6b50; }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .input-row input { margin-bottom: 0; flex: 1; }
+
+    .btn-save {
+      background: linear-gradient(135deg, #b8891a, #d4a843);
+      border: none;
+      border-radius: 8px;
+      color: #0f0d08;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 11px 20px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: opacity 0.2s, box-shadow 0.2s;
+    }
+    .btn-save:hover { box-shadow: 0 0 20px rgba(184,137,26,0.4); }
+
+    .btn-clear {
+      background: transparent;
+      border: 1px solid rgba(196,99,74,0.3);
+      border-radius: 8px;
+      color: #c4634a;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-clear:hover { border-color: #c4634a; background: rgba(196,99,74,0.08); }
+
+    #status {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+    }
+    #status.success {
+      background: rgba(90,158,120,0.12);
+      border: 1px solid rgba(90,158,120,0.25);
+      color: #5a9e78;
+    }
+    #status.error {
+      background: rgba(196,99,74,0.1);
+      border: 1px solid rgba(196,99,74,0.25);
+      color: #c4634a;
+    }
+
+    .key-preview {
+      font-size: 12px;
+      color: #7a6b50;
+      margin-top: 8px;
+    }
+    .key-preview span { color: #d4a843; font-weight: 600; font-family: monospace; }
+
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .info-list li {
+      font-size: 13px;
+      color: #a8906e;
+      display: flex;
+      gap: 8px;
+      line-height: 1.5;
+    }
+    .info-list li::before {
+      content: "✓";
+      color: #5a9e78;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .footer {
+      margin-top: 32px;
+      font-size: 12px;
+      color: #7a6b50;
+      text-align: center;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="logo">◈ Try First</div>
+
+    <h1>Settings</h1>
+    <p class="subtitle">Configure your Anthropic API key so the extension can classify your prompts intelligently — instantly, locally, and privately.</p>
+
+    <!-- API Key Card -->
+    <div class="card">
+      <div class="card-title">Anthropic API Key</div>
+      <p class="card-desc">
+        Get your key at <a href="https://console.anthropic.com/account/keys" target="_blank">console.anthropic.com</a>. The extension uses <strong>claude-haiku-4-5</strong> — the fastest, cheapest model — for sub-second classification. A typical month of daily use costs pennies.
+      </p>
+      <label for="api-key-input">API Key</label>
+      <div class="input-row">
+        <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false" />
+        <button class="btn-save" id="save-btn">Save Key</button>
+      </div>
+      <div class="key-preview" id="key-preview" style="display:none;">
+        Current key: <span id="key-display"></span>
+      </div>
+      <div id="status"></div>
+    </div>
+
+    <!-- Privacy Card -->
+    <div class="card">
+      <div class="card-title">Privacy & Data</div>
+      <ul class="info-list">
+        <li>Your API key is stored only in your browser via <code>chrome.storage.local</code> — never uploaded anywhere.</li>
+        <li>Only the text of your prompt is sent to the Anthropic API for classification. No site data, cookies, or identity.</li>
+        <li>The actual prompt content is <strong>never stored</strong> by this extension — only the result (THINKING or LOOKUP).</li>
+        <li>All your stats and history live entirely on your device.</li>
+      </ul>
+    </div>
+
+    <!-- Clear Data Card -->
+    <div class="card">
+      <div class="card-title">Reset</div>
+      <p class="card-desc">Clear all stored stats, history, and your API key from this device.</p>
+      <button class="btn-clear" id="clear-btn">Clear All Data</button>
+    </div>
+
+    <div class="footer">Try First v2.0 · Built for MindFirst · Your thinking stays yours.</div>
+
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

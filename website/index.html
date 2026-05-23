@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindFirst</title>
+  <script>(function(){var t=localStorage.getItem('mf-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">MindFirst</div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#extension">Extension</a>
+        <a href="#waitlist" class="nav-cta">Join waitlist</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="hero">
+    <div class="container">
+      <h1>Track how much you use AI.<br>Stay in control of it.</h1>
+      <p class="hero-sub">MindFirst is a set of open-source tools that help you measure and limit your AI usage before it becomes a habit you can't see.</p>
+      <div class="hero-actions">
+        <a href="quiz.html" class="btn-primary">Try the quiz</a>
+        <a href="#extension" class="btn-ghost">Get the extension</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="container">
+      <div class="section-label">What it does</div>
+      <h2>Tools for using AI with intention</h2>
+      <div class="features-list">
+        <div class="feature-item reveal">
+          <div class="feature-label">Chrome Extension</div>
+          <div class="feature-desc">
+            <h3>Think before you ask</h3>
+            <p>Intercepts prompts on ChatGPT and asks if this is something you should try yourself first. Classifies each prompt as a thinking task or a lookup task using the Anthropic API.</p>
+          </div>
+        </div>
+        <div class="feature-item reveal">
+          <div class="feature-label">Desktop App</div>
+          <div class="feature-desc">
+            <h3>Time tracking for AI apps</h3>
+            <p>A macOS menu bar app that tracks how long you spend in ChatGPT, Claude, Copilot, Notion, and Perplexity each day. Sends a notification when you hit your self-set limit.</p>
+          </div>
+        </div>
+        <div class="feature-item reveal">
+          <div class="feature-label">AI Literacy Quiz</div>
+          <div class="feature-desc">
+            <h3>Measure what you actually know</h3>
+            <p>A short quiz that tests whether you can answer your own questions independently. Gives you a score and tells you which areas you rely on AI most.</p>
+          </div>
+        </div>
+        <div class="feature-item reveal">
+          <div class="feature-label">Usage Logger</div>
+          <div class="feature-desc">
+            <h3>Log AI interactions manually</h3>
+            <p>A simple form to log each time you use AI, what you used it for, and whether you could have done it yourself. No accounts, no sync, stored in your browser.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="extension">
+    <div class="container">
+      <div class="section-label">Chrome Extension</div>
+      <h2>Think before you send</h2>
+      <p>When you type a prompt into ChatGPT and press send, the extension intercepts it, classifies it, and asks if it's worth trying yourself first. Lookup tasks go straight through. No interruption.</p>
+      <a href="downloads/try-first-extension.zip" class="btn-download">Download extension (.zip)</a>
+      <div class="install-steps">
+        <div class="install-step">1. Download and unzip the file above.</div>
+        <div class="install-step">2. Open Chrome and go to <code>chrome://extensions</code></div>
+        <div class="install-step">3. Enable Developer Mode (top right toggle).</div>
+        <div class="install-step">4. Click Load Unpacked and select the unzipped folder.</div>
+        <div class="install-step">5. Click the extension icon, then Settings, and paste your Anthropic API key.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <div class="container">
+      <div class="section-label">AI Literacy Score</div>
+      <h2>Do you know what you know?</h2>
+      <p>The quiz asks you ten questions across categories like writing, coding, research, and decision-making. It scores how often you could answer them without AI help.</p>
+      <a href="quiz.html" class="btn-primary">Take the quiz</a>
+    </div>
+  </section>
+
+  <section id="waitlist">
+    <div class="container">
+      <div class="section-label">Waitlist</div>
+      <h2>We are still building</h2>
+      <p>MindFirst is in early development. Leave your email and we will let you know when features are ready.</p>
+      <form class="waitlist-form" id="waitlist-form">
+        <input type="email" class="waitlist-input" placeholder="your@email.com" required />
+        <button type="submit" class="btn-primary">Join</button>
+      </form>
+      <p id="waitlist-msg" style="margin-top:16px; opacity:0.6; font-size:14px;"></p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="logo">MindFirst</div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="roast.html">Roast</a>
+      </div>
+      <div class="footer-copy">2026 MindFirst</div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

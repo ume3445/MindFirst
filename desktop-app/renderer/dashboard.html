@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindFirst</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <div id="header">
+    <span class="logo">◈ MindFirst</span>
+    <button id="close-btn" title="Close">✕</button>
+  </div>
+
+  <!-- Tab bar -->
+  <div id="tab-bar">
+    <button class="tab active" data-tab="today">Today</button>
+    <button class="tab" data-tab="week">Week</button>
+    <button class="tab" data-tab="settings">Settings</button>
+  </div>
+
+  <!-- TODAY TAB -->
+  <div id="tab-today" class="tab-content active">
+
+    <div id="today-hero">
+      <div id="today-total-wrap">
+        <span id="today-total">0m</span>
+        <span id="today-label">AI time today</span>
+      </div>
+      <div id="today-limit-wrap">
+        <div id="limit-ring">
+          <svg viewBox="0 0 44 44" id="ring-svg">
+            <circle class="ring-bg" cx="22" cy="22" r="18"/>
+            <circle class="ring-fill" cx="22" cy="22" r="18" id="ring-arc"/>
+          </svg>
+          <span id="ring-pct">0%</span>
+        </div>
+        <span id="ring-label">of daily limit</span>
+      </div>
+    </div>
+
+    <!-- Per-app breakdown -->
+    <div class="section-title">Apps</div>
+    <div id="app-list">
+      <div id="no-activity">No AI apps used today</div>
+    </div>
+
+  </div>
+
+  <!-- WEEK TAB -->
+  <div id="tab-week" class="tab-content">
+    <div class="section-title" style="margin-top:14px;">Last 7 days</div>
+    <div id="week-chart"></div>
+    <div id="week-totals"></div>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div id="tab-settings" class="tab-content">
+    <div class="settings-section">
+      <div class="settings-label">Daily time limit</div>
+      <div class="settings-desc">Get notified at 50 % and 90 % of this limit.</div>
+      <div class="limit-row">
+        <input type="number" id="limit-input" min="10" max="600" step="10" value="120" />
+        <span class="limit-unit">minutes</span>
+        <button id="save-limit-btn">Save</button>
+      </div>
+      <div id="save-status"></div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Tracked AI apps</div>
+      <div class="settings-desc">These apps are tracked automatically:</div>
+      <div id="tracked-apps-list">
+        <span class="app-tag">ChatGPT</span>
+        <span class="app-tag">Claude</span>
+        <span class="app-tag">Copilot</span>
+        <span class="app-tag">Notion</span>
+        <span class="app-tag">Perplexity</span>
+        <span class="app-tag app-tag-dim">+ any app with "AI" in the name</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 320px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0f0d08;
+  color: #f0e6cc;
+}
+
+#app { padding: 14px 14px 18px; }
+
+/* ── Header ── */
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.logo { font-size: 14px; font-weight: 800; color: #d4a843; }
+
+#settings-btn {
+  background: none;
+  border: none;
+  color: #7a6b50;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+}
+#settings-btn:hover { color: #f0e6cc; background: rgba(255,255,255,0.06); }
+
+/* ── No-key banner ── */
+#no-key-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(196, 99, 74, 0.1);
+  border: 1px solid rgba(196, 99, 74, 0.25);
+  border-radius: 8px;
+  padding: 9px 11px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #c4634a;
+  font-weight: 600;
+}
+
+#open-options-btn {
+  background: rgba(196, 99, 74, 0.15);
+  border: 1px solid rgba(196, 99, 74, 0.3);
+  border-radius: 5px;
+  color: #c4634a;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+#open-options-btn:hover { background: rgba(196, 99, 74, 0.25); }
+
+/* ── Thinking Ratio hero card ── */
+#ratio-card {
+  background: linear-gradient(135deg, #1a160a, #0e1209);
+  border: 1px solid rgba(212, 168, 67, 0.18);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#ratio-left { flex: 1; }
+
+#ratio-num {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 3px;
+  color: #f0e6cc;
+}
+#ratio-num.ratio-good {
+  background: linear-gradient(135deg, #5a9e78, #d4a843);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#ratio-num.ratio-mid {
+  background: linear-gradient(135deg, #d4a843, #c4634a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#ratio-num.ratio-low { color: #c4634a; }
+
+#ratio-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #a8906e;
+}
+#ratio-sub {
+  font-size: 10px;
+  color: #7a6b50;
+  margin-top: 2px;
+}
+
+#ratio-right { text-align: right; }
+
+#streak-num {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  color: #d4a843;
+}
+#streak-label {
+  font-size: 10px;
+  color: #7a6b50;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ── Ratio bar ── */
+#ratio-bar-section {
+  margin-bottom: 14px;
+}
+
+#ratio-bar-wrap {
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  height: 5px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+#ratio-bar {
+  height: 100%;
+  border-radius: 4px;
+  width: 0%;
+  transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#ratio-bar.bar-good { background: linear-gradient(90deg, #5a9e78, #d4a843); }
+#ratio-bar.bar-mid  { background: linear-gradient(90deg, #d4a843, #f59e0b); }
+#ratio-bar.bar-low  { background: linear-gradient(90deg, #c4634a, #d4a843); }
+
+#ratio-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #7a6b50;
+  font-weight: 600;
+}
+
+/* ── Section title ── */
+.section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #7a6b50;
+  margin-bottom: 8px;
+}
+
+/* ── Breakdown grid ── */
+#breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.bk-item {
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.bk-thinking { border-color: rgba(212,168,67,0.14); }
+.bk-lookup   { border-color: rgba(96,165,250,0.12); }
+.bk-answered { border-color: rgba(90,158,120,0.14); }
+.bk-skipped  { border-color: rgba(255,255,255,0.06); }
+
+.bk-icon  { font-size: 15px; margin-bottom: 4px; }
+.bk-count {
+  font-size: 19px;
+  font-weight: 800;
+  color: #f0e6cc;
+  line-height: 1;
+}
+.bk-label {
+  font-size: 9px;
+  color: #7a6b50;
+  margin-top: 3px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/* ── History ── */
+#history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.history-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.history-site {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c8b898;
+  text-transform: capitalize;
+}
+
+.history-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.badge-answered { background: rgba(90,158,120,0.14); color: #5a9e78; }
+.badge-skipped  { background: rgba(196,99,74,0.1);   color: #c4634a; }
+.badge-lookup   { background: rgba(96,165,250,0.1);  color: #60a5fa; }
+
+.history-time {
+  font-size: 10px;
+  color: #7a6b50;
+}
+
+/* ── Empty state ── */
+#empty-state {
+  display: none;
+  text-align: center;
+  color: #7a6b50;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 20px 0;
+}

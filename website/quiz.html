@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Literacy Score — MindFirst</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="quiz.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">MindFirst</a>
+      <span class="nav-tag">AI Literacy Test</span>
+    </div>
+  </nav>
+
+  <main id="app">
+
+    <!-- ── INTRO SCREEN ── -->
+    <div id="screen-intro" class="screen active">
+      <div class="intro-inner">
+        <div class="section-label">Free · Takes 3 minutes</div>
+        <h1>How well can you spot bad AI outputs?</h1>
+        <p>10 questions. Real AI responses. You identify what's wrong — hallucinations, bias, flawed reasoning, overconfidence, and missing context.</p>
+        <div class="intro-cats">
+          <span class="icat">Hallucinations</span>
+          <span class="icat">Bias</span>
+          <span class="icat">Flawed Reasoning</span>
+          <span class="icat">Overconfidence</span>
+          <span class="icat">Missing Context</span>
+        </div>
+        <button class="btn-primary" id="btn-start">Start the test</button>
+        <p class="intro-note">No account needed. Your score is shown instantly.</p>
+      </div>
+    </div>
+
+    <!-- ── QUIZ SCREEN ── -->
+    <div id="screen-quiz" class="screen">
+      <div class="quiz-wrap">
+
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="q-counter">Question 1 of 10</span>
+          <span id="q-category-badge" class="q-cat-badge"></span>
+        </div>
+
+        <div class="ai-response-box">
+          <div class="ai-response-header">
+            <div class="ai-dot"></div>
+            <span>AI Response</span>
+          </div>
+          <p id="q-ai-response"></p>
+        </div>
+
+        <p class="q-question" id="q-question"></p>
+
+        <div class="options-grid" id="options-grid"></div>
+
+        <div class="explanation-box" id="explanation-box" style="display:none;">
+          <div class="explanation-icon" id="explanation-icon"></div>
+          <p id="explanation-text"></p>
+        </div>
+
+        <button class="btn-primary btn-next" id="btn-next" disabled>Next question</button>
+
+      </div>
+    </div>
+
+    <!-- ── RESULTS SCREEN ── -->
+    <div id="screen-results" class="screen">
+      <div class="results-wrap">
+
+        <div class="score-display">
+          <div class="score-num" id="score-num">0</div>
+          <div class="score-denom">/100</div>
+        </div>
+
+        <div class="rating-badge" id="rating-badge"></div>
+        <h2 id="results-title"></h2>
+        <p class="results-sub" id="results-sub"></p>
+
+        <div class="breakdown-section">
+          <div class="breakdown-title">Score by category</div>
+          <div class="breakdown-bars" id="breakdown-bars"></div>
+        </div>
+
+        <div class="reco-section">
+          <div class="reco-title">Recommendations</div>
+          <div class="reco-list" id="reco-list"></div>
+        </div>
+
+        <div class="results-actions">
+          <button class="btn-primary" id="btn-share">Share your score</button>
+          <button class="btn-retry" id="btn-retry">Retake the test</button>
+          <a href="index.html" class="btn-home">Back to MindFirst</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="quiz.js"></script>
+</body>
+</html>

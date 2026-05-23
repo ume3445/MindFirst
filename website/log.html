@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log AI Usage — MindFirst</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="log.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">MindFirst</a>
+      <span class="nav-tag">Usage Log</span>
+    </div>
+  </nav>
+
+  <main>
+
+    <div id="summary-card">
+      <div class="summary-row">
+        <div class="summary-stat">
+          <div class="summary-num" id="s-intentional">0</div>
+          <div class="summary-label">Intentional today</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-stat">
+          <div class="summary-num" id="s-free">0</div>
+          <div class="summary-label">Free use today</div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-stat">
+          <div class="summary-num" id="s-streak">0</div>
+          <div class="summary-label">Day streak</div>
+        </div>
+      </div>
+      <div id="limit-row">
+        <div id="limit-info">
+          <span id="limit-text">0 / 10 intentional uses today</span>
+        </div>
+        <div id="limit-bar-wrap"><div id="limit-bar"></div></div>
+      </div>
+    </div>
+
+    <div id="log-card">
+      <h2>Log an AI session</h2>
+      <p class="log-sub">Used AI on your phone or another device? Log it here.</p>
+
+      <div class="field-label">What were you using it for?</div>
+      <div id="cat-grid">
+        <button class="cat-btn" data-id="study"    data-counts="true">
+          <span class="cat-name">Study / Work</span>
+          <span class="cat-badge tracked">tracked</span>
+        </button>
+        <button class="cat-btn" data-id="creative" data-counts="true">
+          <span class="cat-name">Creative</span>
+          <span class="cat-badge tracked">tracked</span>
+        </button>
+        <button class="cat-btn" data-id="personal" data-counts="false">
+          <span class="cat-name">Personal / Emotional</span>
+          <span class="cat-badge free">free</span>
+        </button>
+        <button class="cat-btn" data-id="lookup"   data-counts="false">
+          <span class="cat-name">Quick Lookup</span>
+          <span class="cat-badge free">free</span>
+        </button>
+      </div>
+
+      <div id="think-section" style="display:none;">
+        <div class="field-label">What was your own thinking first? <span class="optional">(optional)</span></div>
+        <textarea id="think-input" placeholder="Jot down what you were thinking before asking AI..." rows="3"></textarea>
+      </div>
+
+      <div class="field-label">Which site?</div>
+      <div id="site-grid">
+        <button class="site-btn" data-site="chatgpt.com">ChatGPT</button>
+        <button class="site-btn" data-site="claude.ai">Claude</button>
+        <button class="site-btn" data-site="gemini.google.com">Gemini</button>
+        <button class="site-btn" data-site="perplexity.ai">Perplexity</button>
+        <button class="site-btn" data-site="copilot.microsoft.com">Copilot</button>
+        <button class="site-btn" data-site="other">Other</button>
+      </div>
+
+      <button id="log-btn" disabled>Log Session</button>
+    </div>
+
+    <div id="history-card">
+      <h3>Today's log</h3>
+      <div id="history-list"></div>
+      <div id="history-empty">No sessions logged today.</div>
+
+      <h3 style="margin-top:24px;">All time</h3>
+      <div id="alltime-grid">
+        <div class="at-item">
+          <div class="at-num" id="at-study">0</div>
+          <div class="at-label">Study/Work</div>
+        </div>
+        <div class="at-item">
+          <div class="at-num" id="at-creative">0</div>
+          <div class="at-label">Creative</div>
+        </div>
+        <div class="at-item">
+          <div class="at-num" id="at-personal">0</div>
+          <div class="at-label">Personal</div>
+        </div>
+        <div class="at-item">
+          <div class="at-num" id="at-lookup">0</div>
+          <div class="at-label">Quick Lookup</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="log.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roast My AI Usage — MindFirst</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="roast.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">MindFirst</a>
+      <span class="nav-tag">Roast My AI Usage</span>
+    </div>
+  </nav>
+
+  <main>
+
+    <div id="screen-input">
+      <div class="input-inner">
+        <div class="section-label">Paste · Analyse · Get Roasted</div>
+        <h1>How dependent on AI do you actually sound?</h1>
+        <p>Paste your last ChatGPT, Claude, or Gemini conversation below. We'll analyse it and deliver an honest — and honest — assessment of how dependent you sound.</p>
+
+        <div class="paste-card">
+          <div class="paste-card-header">
+            <span class="paste-card-label">Your conversation</span>
+          </div>
+          <textarea id="convo-input" placeholder="Paste your conversation here...
+
+Example:
+Me: Can you write a professional email to my boss asking for a day off?
+AI: Sure! Here's a professional email...
+Me: Actually make it more casual
+AI: Of course! Here's a more casual version...
+Me: Can you also write one for my colleague?"></textarea>
+          <div class="paste-footer">
+            <span id="char-count">0 characters</span>
+            <button id="roast-btn" disabled>Roast Me</button>
+          </div>
+        </div>
+
+        <p class="privacy-note">Nothing is sent anywhere. All analysis happens in your browser.</p>
+      </div>
+    </div>
+
+    <div id="screen-results" style="display:none;">
+      <div class="results-inner">
+
+        <div class="roast-header">
+          <div class="roast-verdict" id="roast-verdict"></div>
+          <div class="dep-score-wrap">
+            <div class="dep-label">Dependency score</div>
+            <div class="dep-score" id="dep-score">0</div>
+            <div class="dep-max">/100</div>
+          </div>
+        </div>
+
+        <div class="dep-bar-wrap">
+          <div class="dep-bar" id="dep-bar"></div>
+          <div class="dep-bar-label" id="dep-bar-label"></div>
+        </div>
+
+        <div class="roast-card" id="roast-card">
+          <div class="roast-card-header">
+            <span class="roast-title" id="roast-title"></span>
+          </div>
+          <div class="roast-body" id="roast-body"></div>
+        </div>
+
+        <div class="evidence-card" id="evidence-card">
+          <div class="evidence-title">The evidence</div>
+          <div class="evidence-list" id="evidence-list"></div>
+        </div>
+
+        <div class="signals-card">
+          <div class="signals-title">What we detected</div>
+          <div class="signals-grid" id="signals-grid"></div>
+        </div>
+
+        <div class="redeem-card" id="redeem-card" style="display:none;">
+          <div class="redeem-title">In your defence</div>
+          <div class="redeem-body" id="redeem-body"></div>
+        </div>
+
+        <div class="results-actions">
+          <button class="btn-primary" id="btn-share">Share your roast</button>
+          <button class="btn-retry" id="btn-retry">Try another</button>
+          <a href="quiz.html" class="btn-quiz">Take the AI Literacy Test instead</a>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script src="roast.js"></script>
+</body>
+</html>

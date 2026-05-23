@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Try First</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- Header -->
+    <div id="header">
+      <span class="logo">◈ Try First</span>
+      <button id="settings-btn" title="Settings">⚙</button>
+    </div>
+
+    <!-- No API key warning -->
+    <div id="no-key-banner" style="display:none;">
+      <span>⚠ Add your API key to activate</span>
+      <button id="open-options-btn">Set up →</button>
+    </div>
+
+    <!-- Thinking Ratio hero card -->
+    <div id="ratio-card">
+      <div id="ratio-left">
+        <div id="ratio-num">—</div>
+        <div id="ratio-label">Thinking Ratio</div>
+        <div id="ratio-sub">answered before asking AI</div>
+      </div>
+      <div id="ratio-right">
+        <div id="streak-wrap">
+          <div id="streak-num">0</div>
+          <div id="streak-label">day streak 🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ratio bar -->
+    <div id="ratio-bar-section">
+      <div id="ratio-bar-wrap">
+        <div id="ratio-bar"></div>
+      </div>
+      <div id="ratio-bar-labels">
+        <span id="answered-label">0 answered</span>
+        <span id="skipped-label">0 skipped</span>
+      </div>
+    </div>
+
+    <!-- Task breakdown -->
+    <div class="section-title">All-time Breakdown</div>
+    <div id="breakdown-grid">
+      <div class="bk-item bk-thinking">
+        <div class="bk-icon">🧠</div>
+        <div class="bk-count" id="count-thinking">0</div>
+        <div class="bk-label">Thinking<br/>Tasks</div>
+      </div>
+      <div class="bk-item bk-lookup">
+        <div class="bk-icon">🔍</div>
+        <div class="bk-count" id="count-lookup">0</div>
+        <div class="bk-label">Lookup<br/>Tasks</div>
+      </div>
+      <div class="bk-item bk-answered">
+        <div class="bk-icon">✅</div>
+        <div class="bk-count" id="count-answered">0</div>
+        <div class="bk-label">Tried<br/>First</div>
+      </div>
+      <div class="bk-item bk-skipped">
+        <div class="bk-icon">⏭</div>
+        <div class="bk-count" id="count-skipped">0</div>
+        <div class="bk-label">Skipped</div>
+      </div>
+    </div>
+
+    <!-- Recent activity -->
+    <div class="section-title" id="activity-title">Recent Activity</div>
+    <div id="history-list"></div>
+    <div id="empty-state">No activity yet.<br/>Visit any AI site to start.</div>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
