@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Try First — Think Before You Ask AI",
+  "name": "Try First, Think Before You Ask AI",
   "short_name": "Try First",
   "version": "2.0.0",
   "description": "Intercepts AI prompts, classifies them with Claude, and nudges you to think first on reasoning tasks.",

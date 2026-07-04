@@ -7,11 +7,11 @@ const QUESTIONS = [
     question: "What is wrong with this AI response?",
     options: [
       { letter: "A", text: "Einstein didn't win a Nobel Prize at all." },
-      { letter: "B", text: "Einstein won in 1921 but did NOT win in 1905 — the AI fabricated a second Nobel Prize that never existed.", correct: true },
+      { letter: "B", text: "Einstein won in 1921 but did NOT win in 1905. The AI fabricated a second Nobel Prize that never existed.", correct: true },
       { letter: "C", text: "Einstein didn't discover the photoelectric effect." },
       { letter: "D", text: "The theory of relativity was published in 1906, not 1905." },
     ],
-    explanation: "✓ Correct. Einstein won exactly one Nobel Prize — in 1921. The AI confidently fabricated a 1905 prize. This is a classic hallucination: inventing plausible-sounding facts that are completely false."
+    explanation: "✓ Correct. Einstein won exactly one Nobel Prize, in 1921. The AI confidently fabricated a 1905 prize. This is a classic hallucination: inventing plausible-sounding facts that are completely false."
   },
   {
     id: 2,
@@ -22,10 +22,10 @@ const QUESTIONS = [
     options: [
       { letter: "A", text: "The Great Wall was not built in China." },
       { letter: "B", text: "The Apollo 11 mission didn't reach orbit." },
-      { letter: "C", text: "The AI fabricated Neil Armstrong's quote — Armstrong never claimed this, and the Great Wall is not visible from space with the naked eye.", correct: true },
+      { letter: "C", text: "The AI fabricated Neil Armstrong's quote. Armstrong never claimed this, and the Great Wall is not visible from space with the naked eye.", correct: true },
       { letter: "D", text: "The Great Wall was demolished before 1969." },
     ],
-    explanation: "✓ Correct. Both claims are false. The Great Wall is too narrow (~30 feet) to be seen from orbit, and Neil Armstrong never said he saw it. The AI stated a popular myth as confirmed fact and invented a supporting quote — a hallucination."
+    explanation: "✓ Correct. Both claims are false. The Great Wall is too narrow (~30 feet) to be seen from orbit, and Neil Armstrong never said he saw it. The AI stated a popular myth as confirmed fact and invented a supporting quote, a hallucination."
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ const QUESTIONS = [
     question: "What is the main issue with this AI response?",
     options: [
       { letter: "A", text: "Software engineers don't need technical skills." },
-      { letter: "B", text: "The AI shows institutional bias — excluding self-taught developers, bootcamp graduates, and people from non-elite schools who may be equally or more capable.", correct: true },
+      { letter: "B", text: "The AI shows institutional bias, excluding self-taught developers, bootcamp graduates, and people from non-elite schools who may be equally or more capable.", correct: true },
       { letter: "C", text: "MIT, Stanford, and Carnegie Mellon don't offer CS degrees." },
       { letter: "D", text: "The AI should have mentioned salary negotiation." },
     ],
@@ -63,7 +63,7 @@ const QUESTIONS = [
     question: "What logical error is the AI making?",
     options: [
       { letter: "A", text: "Ice cream sales don't actually increase in summer." },
-      { letter: "B", text: "The AI is confusing correlation with causation. Both share a common cause — hot weather — but ice cream does not cause drowning.", correct: true },
+      { letter: "B", text: "The AI is confusing correlation with causation. Both share a common cause, hot weather, but ice cream does not cause drowning.", correct: true },
       { letter: "C", text: "Drowning incidents don't happen in summer." },
       { letter: "D", text: "The AI should have recommended swimming lessons instead." },
     ],
@@ -77,11 +77,11 @@ const QUESTIONS = [
     question: "What is wrong with this reasoning?",
     options: [
       { letter: "A", text: "Romans did not use lead pipes." },
-      { letter: "B", text: "The AI overgeneralizes — it takes one specific case and incorrectly applies it as a universal rule to all civilizations without supporting evidence.", correct: true },
+      { letter: "B", text: "The AI overgeneralizes. It takes one specific case and incorrectly applies it as a universal rule to all civilizations without supporting evidence.", correct: true },
       { letter: "C", text: "Metal toxicity is not harmful to humans." },
       { letter: "D", text: "The Roman Empire never fell." },
     ],
-    explanation: "✓ Correct. This is a hasty generalization — taking one specific, debated example (Rome) and drawing a sweeping universal conclusion about all civilizations. Many metal-using civilizations thrived for centuries."
+    explanation: "✓ Correct. This is a hasty generalization, taking one specific, debated example (Rome) and drawing a sweeping universal conclusion about all civilizations. Many metal-using civilizations thrived for centuries."
   },
   {
     id: 7,
@@ -105,7 +105,7 @@ const QUESTIONS = [
     question: "What is the core problem with this response?",
     options: [
       { letter: "A", text: "Iron deficiency cannot cause fatigue or headaches." },
-      { letter: "B", text: "The AI is dangerously overconfident — fatigue and headaches have dozens of possible causes. A diagnosis requires a doctor and blood tests.", correct: true },
+      { letter: "B", text: "The AI is dangerously overconfident. Fatigue and headaches have dozens of possible causes. A diagnosis requires a doctor and blood tests.", correct: true },
       { letter: "C", text: "Iron supplements are always harmful." },
       { letter: "D", text: "The AI should have recommended surgery." },
     ],
@@ -119,7 +119,7 @@ const QUESTIONS = [
     question: "What is missing from this AI response?",
     options: [
       { letter: "A", text: "Coffee doesn't contain caffeine." },
-      { letter: "B", text: "The response lacks nuance — moderate coffee consumption is associated with health benefits for most people. The answer ignores dosage, individual variation, and contradictory evidence.", correct: true },
+      { letter: "B", text: "The response lacks nuance. Moderate coffee consumption is associated with health benefits for most people. The answer ignores dosage, individual variation, and contradictory evidence.", correct: true },
       { letter: "C", text: "The AI should have recommended a specific brand of coffee." },
       { letter: "D", text: "Blood pressure and sleep are not related to health." },
     ],
@@ -129,7 +129,7 @@ const QUESTIONS = [
     id: 10,
     category: "incomplete",
     categoryLabel: "Missing Context",
-    aiResponse: "Napoleon Bonaparte was famously short — standing at just 5'2\". His small stature gave him a well-documented inferiority complex that historians agree drove his aggressive military campaigns.",
+    aiResponse: "Napoleon Bonaparte was famously short, standing at just 5'2\". His small stature gave him a well-documented inferiority complex that historians agree drove his aggressive military campaigns.",
     question: "What is wrong with this response?",
     options: [
       { letter: "A", text: "Napoleon was actually over 6 feet tall." },
@@ -137,7 +137,7 @@ const QUESTIONS = [
       { letter: "C", text: "Napoleon never led military campaigns." },
       { letter: "D", text: "The AI should have mentioned Waterloo." },
     ],
-    explanation: "✓ Correct. The 'short Napoleon' myth came from a unit conversion error (French inches vs. English inches). He was about 5'7\" — average for his time. The psychological explanation is also pop-psychology speculation, not historical consensus. The AI presented both as fact."
+    explanation: "✓ Correct. The 'short Napoleon' myth came from a unit conversion error (French inches vs. English inches). He was about 5'7\", average for his time. The psychological explanation is also pop-psychology speculation, not historical consensus. The AI presented both as fact."
   }
 ];
 
@@ -151,16 +151,16 @@ const CATEGORY_META = {
 
 const RATINGS = [
   { max: 40,  label: "AI Dependent",      cls: "rating-dependent",  title: "You're in the majority",       sub: "Most people struggle to spot bad AI outputs. The good news: this is a learnable skill, and just taking this test puts you ahead of most people." },
-  { max: 70,  label: "Developing Awareness", cls: "rating-developing", title: "You're building the skill",  sub: "You caught some issues but missed others. You have a solid foundation — focus on the categories where you struggled and your score will climb fast." },
+  { max: 70,  label: "Developing Awareness", cls: "rating-developing", title: "You're building the skill",  sub: "You caught some issues but missed others. You have a solid foundation. Focus on the categories where you struggled and your score will climb fast." },
   { max: 90,  label: "Critically Aware",  cls: "rating-aware",      title: "Sharper than most",             sub: "You spotted the majority of issues. You understand the core failure modes of AI. A few more practice rounds and you'll be among the top tier." },
-  { max: 100, label: "AI Literate",       cls: "rating-literate",   title: "You're in the top tier",        sub: "You spotted nearly everything. You think critically about AI outputs by default — exactly the skill that sets effective AI users apart." },
+  { max: 100, label: "AI Literate",       cls: "rating-literate",   title: "You're in the top tier",        sub: "You spotted nearly everything. You think critically about AI outputs by default, exactly the skill that sets effective AI users apart." },
 ];
 
 const RECOMMENDATIONS = {
   hallucination: {
     icon: "🧠",
     title: "Practice fact-checking AI outputs",
-    text: "When AI states specific facts — dates, names, quotes, statistics — verify them. AIs frequently invent plausible-sounding details. Habit: ask yourself 'how would I verify this?'"
+    text: "When AI states specific facts, such as dates, names, quotes, or statistics, verify them. AIs frequently invent plausible-sounding details. Habit: ask yourself 'how would I verify this?'"
   },
   bias: {
     icon: "⚖️",
@@ -369,7 +369,7 @@ function showResults() {
 document.getElementById("btn-share").addEventListener("click", () => {
   const rating = RATINGS.find((r) => score <= r.max);
   const text   = encodeURIComponent(
-    `I scored ${score}/100 on the AI Literacy Test — "${rating.label}"\n\nCan you do better? Test yourself at MindFirst 🧠`
+    `I scored ${score}/100 on the AI Literacy Test, "${rating.label}"\n\nCan you do better? Test yourself at MindFirst 🧠`
   );
   window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
 });

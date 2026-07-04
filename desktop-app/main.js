@@ -127,7 +127,7 @@ function checkNotifications() {
 
 function notify(title, body) {
   if (!Notification.isSupported()) return;
-  new Notification({ title: `◈ MindFirst — ${title}`, body, silent: false }).show();
+  new Notification({ title: `◈ MindFirst, ${title}`, body, silent: false }).show();
 }
 
 // ─── Tray title (shows minutes used today) ────────────────────
@@ -175,7 +175,7 @@ function scheduleDailySummary() {
         .sort(([, a], [, b]) => b - a)
         .map(([name, s]) => `${name}: ${Math.round(s / 60)}m`)
         .join(' · ');
-      notify(`Daily Summary — ${mins} min total`, lines);
+      notify(`Daily Summary, ${mins} min total`, lines);
     }
     setTimeout(fire, 24 * 60 * 60 * 1000); // repeat each day
   }, msUntil10pm());

@@ -1,7 +1,7 @@
 {
   "name": "mindfirst-desktop",
   "version": "1.0.0",
-  "description": "MindFirst — AI Usage Monitor for Mac",
+  "description": "MindFirst, AI Usage Monitor for Mac",
   "main": "main.js",
   "scripts": {
     "start": "electron .",

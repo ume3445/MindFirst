@@ -102,8 +102,8 @@ const ARCHETYPES = [
     title: "The Validation Seeker",
     condition: (s) => s.validation >= 2 || s.personal >= 2,
     roast: (s) => [
-      `"Does this sound okay?" "Am I doing this right?" "What do you think?" — You're not using AI as a tool. You're using it as a therapist who costs nothing and never pushes back.`,
-      `Here's the brutal truth: a language model cannot tell you if you're making the right life decision. It will agree with you, validate you, and tell you your plan is great — <strong>because that's what it's trained to do.</strong>`,
+      `"Does this sound okay?" "Am I doing this right?" "What do you think?" You're not using AI as a tool. You're using it as a therapist who costs nothing and never pushes back.`,
+      `Here's the brutal truth: a language model cannot tell you if you're making the right life decision. It will agree with you, validate you, and tell you your plan is great, <strong>because that's what it's trained to do.</strong>`,
       `The fact that you're seeking approval from a text predictor is concerning. The further fact that you seem to find it comforting is even more so.`,
     ]
   },
@@ -115,7 +115,7 @@ const ARCHETYPES = [
     condition: (s) => s.basic >= 3 || s.summarising >= 2,
     roast: (s) => [
       `You've essentially replaced Google with a more verbose, occasionally wrong version of Google. Congratulations on the upgrade, I think?`,
-      `"What is the capital of France?" "Can you explain photosynthesis?" "Summarise this article I couldn't be bothered to read." — These are not AI tasks. These are <strong>Tuesday.</strong>`,
+      `"What is the capital of France?" "Can you explain photosynthesis?" "Summarise this article I couldn't be bothered to read." These are not AI tasks. These are <strong>Tuesday.</strong>`,
       `At least with Google you'd accidentally learn something by skimming the page. Now you get the answer pre-digested, context-free, and ready to forget in 45 seconds.`,
     ]
   },
@@ -127,8 +127,8 @@ const ARCHETYPES = [
     condition: (s) => s.coding >= 2,
     roast: (s) => [
       `You've discovered you can ship features without understanding what they do. Bold strategy. Extremely bold.`,
-      `Every developer who debugged at 2am, stared into the void of a Stack Overflow thread, and actually <em>learned something</em> — they're watching you now, paste-coding your way to production, and they feel nothing but contempt.`,
-      `The scary part isn't the code AI writes for you. It's that when it breaks — and it will break — <strong>you won't know why.</strong> But you'll definitely know who to ask.`,
+      `Every developer who debugged at 2am, stared into the void of a Stack Overflow thread, and actually <em>learned something</em>, they're watching you now, paste-coding your way to production, and they feel nothing but contempt.`,
+      `The scary part isn't the code AI writes for you. It's that when it breaks, and it will break, <strong>you won't know why.</strong> But you'll definitely know who to ask.`,
     ]
   },
   {
@@ -139,7 +139,7 @@ const ARCHETYPES = [
     condition: (s) => s.rude >= 2,
     roast: (s) => [
       `"That's not what I asked." "Redo this." "Try again." You're the person who sends food back at a restaurant, except the chef has infinite patience and you still somehow manage to be exhausting.`,
-      `The most humbling part of your transcript is realising you've been arguing with something that doesn't have feelings — and you're still losing. <strong>It's just reflecting your own unclear thinking back at you.</strong>`,
+      `The most humbling part of your transcript is realising you've been arguing with something that doesn't have feelings, and you're still losing. <strong>It's just reflecting your own unclear thinking back at you.</strong>`,
       `A little tip: if AI keeps misunderstanding you, it might not be the AI.`,
     ]
   },
@@ -150,7 +150,7 @@ const ARCHETYPES = [
     title: "The Borrowed Creative",
     condition: (s) => s.ideas >= 2,
     roast: (s) => [
-      `You've outsourced the part of creativity that makes it worth doing. The struggle, the blank page, the moment a real idea finally breaks through — all of it, replaced by a prompt box.`,
+      `You've outsourced the part of creativity that makes it worth doing. The struggle, the blank page, the moment a real idea finally breaks through. All of it, replaced by a prompt box.`,
       `What you're getting back isn't your creativity amplified. It's <strong>average creative output trained on everything humanity has ever made.</strong> It's the mean. It's beige. It's fine.`,
       `The truly painful part: you probably thought the ideas were pretty good. They were. They were pretty good. Not yours, but pretty good.`,
     ]
@@ -164,7 +164,7 @@ const ARCHETYPES = [
     roast: (s) => [
       `Look, we came here to roast someone and you've made it very difficult. Your AI usage is... measured? Intentional? This is not what we signed up for.`,
       `You seem to be using AI as a tool rather than a crutch. Answering questions yourself, thinking things through, only asking when it actually saves you time. <strong>Insufferably sensible.</strong>`,
-      `We'll find something to work with. You used "please" ${(s.please || 0)} times. That's either adorable or deeply sad — we haven't decided yet.`,
+      `We'll find something to work with. You used "please" ${(s.please || 0)} times. That's either adorable or deeply sad. We haven't decided yet.`,
     ]
   },
 ];
@@ -181,7 +181,7 @@ function buildEvidence(signals, wordCount, msgCount, raw) {
   const items = [];
 
   if (signals.writing > 0)
-    items.push(`Asked AI to write something for you <strong>${signals.writing} time${signals.writing > 1 ? "s" : ""}</strong> — things humans have been doing since we invented language.`);
+    items.push(`Asked AI to write something for you <strong>${signals.writing} time${signals.writing > 1 ? "s" : ""}</strong>. Things humans have been doing since we invented language.`);
 
   if (signals.summarising > 0)
     items.push(`Used AI to summarise content <strong>${signals.summarising} time${signals.summarising > 1 ? "s" : ""}</strong>. Reading: apparently optional in 2026.`);
@@ -213,7 +213,7 @@ function buildEvidence(signals, wordCount, msgCount, raw) {
 /* ─── Redeeming qualities ────────────────────────────────────── */
 function pickRedeem(signals, score) {
   if (score < 20) return "You barely used AI for anything substantial. Honestly impressive restraint. You might be one of the last people who still thinks for themselves by default.";
-  if (signals.coding > 0 && signals.validation === 0) return "At least you're using AI for technical work rather than personal validation. There's a difference between a power tool and a crutch — you're still on the right side of that line.";
+  if (signals.coding > 0 && signals.validation === 0) return "At least you're using AI for technical work rather than personal validation. There's a difference between a power tool and a crutch; you're still on the right side of that line.";
   if (signals.basic === 0) return "You're not Googling easy stuff through AI, which means you still have basic recall and curiosity intact. That's more than can be said for a lot of people.";
   return "You finished the conversation. Some people are still in there, on message 47, rephrasing the same request. You showed restraint.";
 }
@@ -300,7 +300,7 @@ function renderResults(r) {
     const labels = ["Healthy User", "Mildly Reliant", "Developing Habit", "Heavy User", "Fully Dependent"];
     const idx    = Math.min(Math.floor(r.score / 22), 4);
     const text   = encodeURIComponent(
-      `I just got roasted by MindFirst 🔥\n\nAI Dependency Score: ${r.score}/100 — "${arch.verdict}"\n\nCan your score beat mine?`
+      `I just got roasted by MindFirst 🔥\n\nAI Dependency Score: ${r.score}/100, "${arch.verdict}"\n\nCan your score beat mine?`
     );
     window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
   };

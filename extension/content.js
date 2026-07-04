@@ -312,9 +312,9 @@ function showThinkingPopup(onDecision) {
         <span id="tf-popup-logo">◈ Try First</span>
         <button id="tf-popup-close" aria-label="Close">✕</button>
       </div>
-      <p id="tf-popup-title">Wait — what's your own answer first?</p>
+      <p id="tf-popup-title">Wait, what's your own answer first?</p>
       <p id="tf-popup-sub">This looks like a reasoning task. Spending 30 seconds on it yourself builds the skill.</p>
-      <textarea id="tf-popup-input" placeholder="Your thinking… (optional — even a few words count)" rows="3"></textarea>
+      <textarea id="tf-popup-input" placeholder="Your thinking… (optional, even a few words count)" rows="3"></textarea>
       <div id="tf-popup-actions">
         <button id="tf-popup-skip">Skip this time</button>
         <button id="tf-popup-submit">Submit My Answer First →</button>
