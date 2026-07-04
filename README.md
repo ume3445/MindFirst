@@ -20,7 +20,7 @@ This repository contains three components that work independently.
 
 - Node.js 18+ and npm (for the desktop app)
 - A Chromium-based browser (Chrome, Brave, Arc) for the extension
-- An Anthropic API key for the extension's prompt classifier — get one at [console.anthropic.com](https://console.anthropic.com)
+- An Anthropic API key for the extension's prompt classifier, get one at [console.anthropic.com](https://console.anthropic.com)
 
 ---
 
