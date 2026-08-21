@@ -6,6 +6,7 @@
   "description": "Intercepts AI prompts, classifies them with Claude, and nudges you to think first on reasoning tasks.",
   "permissions": ["storage"],
   "host_permissions": [
+    "https://mindfirst-classify-api.umerhammad010.workers.dev/*",
     "https://api.anthropic.com/*"
   ],
   "background": {

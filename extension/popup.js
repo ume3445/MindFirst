@@ -1,6 +1,6 @@
 /* ─── Try First · Popup Dashboard v2 ────────────────────────── */
 
-chrome.storage.local.get(['stats', 'apiKey'], (data) => {
+chrome.storage.local.get(['stats', 'limitReached'], (data) => {
   const stats = data.stats || {
     thinkingTasks : 0,
     lookupTasks   : 0,
@@ -10,8 +10,8 @@ chrome.storage.local.get(['stats', 'apiKey'], (data) => {
     lastAnswerDate: '',
   };
 
-  // ── API key warning
-  if (!data.apiKey) {
+  // ── Free daily limit warning
+  if (data.limitReached) {
     document.getElementById('no-key-banner').style.display = 'flex';
   }
 

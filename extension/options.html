@@ -197,13 +197,13 @@
     <div class="logo">◈ Try First</div>
 
     <h1>Settings</h1>
-    <p class="subtitle">Configure your Anthropic API key so the extension can classify your prompts intelligently, instantly, locally, and privately.</p>
+    <p class="subtitle">Try First works out of the box with a free daily classification limit. Add your own Anthropic API key only if you want unlimited use.</p>
 
     <!-- API Key Card -->
     <div class="card">
-      <div class="card-title">Anthropic API Key</div>
+      <div class="card-title">Anthropic API Key <span style="font-weight:400; text-transform:none; letter-spacing:normal; color:#a8906e;">(optional)</span></div>
       <p class="card-desc">
-        Get your key at <a href="https://console.anthropic.com/account/keys" target="_blank">console.anthropic.com</a>. The extension uses <strong>claude-haiku-4-5</strong>, the fastest, cheapest model, for sub-second classification. A typical month of daily use costs pennies.
+        Not required — Try First already classifies prompts for free, up to a daily limit. Add your own key only if you want unlimited classifications beyond that limit. Get one at <a href="https://console.anthropic.com/account/keys" target="_blank">console.anthropic.com</a>. The extension uses <strong>claude-haiku-4-5</strong>, the fastest, cheapest model, for sub-second classification. A typical month of daily use costs pennies.
       </p>
       <label for="api-key-input">API Key</label>
       <div class="input-row">
@@ -221,7 +221,8 @@
       <div class="card-title">Privacy & Data</div>
       <ul class="info-list">
         <li>Your API key is stored only in your browser via <code>chrome.storage.local</code>, never uploaded anywhere.</li>
-        <li>Only the text of your prompt is sent to the Anthropic API for classification. No site data, cookies, or identity.</li>
+        <li>A random installation ID, not tied to your identity, is sent to MindFirst's backend so it can enforce the free daily classification limit.</li>
+        <li>Your prompt itself is only ever sent onward to Anthropic's API for classification, and is never stored on MindFirst's servers.</li>
         <li>The actual prompt content is <strong>never stored</strong> by this extension, only the result (THINKING or LOOKUP).</li>
         <li>If you write your own reasoning in the "Your thinking…" popup, that note is stored locally only, same as your stats and history.</li>
         <li>All your stats and history live entirely on your device.</li>
