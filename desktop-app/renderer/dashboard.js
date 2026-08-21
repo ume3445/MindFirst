@@ -154,7 +154,25 @@ async function load() {
   renderWeek(today, history);
 }
 
-load();
+// Refresh data every 5 seconds, but only while the window is actually
+// visible — it's never destroyed between toggles, just hidden, so an
+// unconditional setInterval would poll forever in the background.
+let pollTimer = null;
 
-// Refresh data every 5 seconds while open
-setInterval(load, 5000);
+function startPolling() {
+  if (pollTimer) return;
+  load();
+  pollTimer = setInterval(load, 5000);
+}
+
+function stopPolling() {
+  clearInterval(pollTimer);
+  pollTimer = null;
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopPolling();
+  else startPolling();
+});
+
+if (!document.hidden) startPolling();
