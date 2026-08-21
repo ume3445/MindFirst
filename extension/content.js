@@ -127,8 +127,8 @@ const SITE = (function () {
         'button[type="submit"]',
       ],
       inputSelectors: [
-        'textarea[placeholder*="Ask" i]',
-        'textarea',
+        '#ask-input',
+        'div[contenteditable="true"]',
       ],
     };
   }
@@ -233,49 +233,55 @@ function allowThrough(fn) {
   setTimeout(() => { bypassing = false; }, 150);
 }
 
-// ─── Save classification to storage (no prompt content) ────────
-function saveResult(type, answered) {
-  chrome.storage.local.get(['stats', 'activityLog'], (data) => {
-    const stats = data.stats || {
-      thinkingTasks : 0,
-      lookupTasks   : 0,
-      answered      : 0,
-      skipped       : 0,
-      streak        : 0,
-      lastAnswerDate: '',
-    };
-    const log = data.activityLog || [];
+// ─── Save classification via background SW (serialized writes) ─
+// Writes are routed through background.js instead of hitting
+// chrome.storage.local directly, so two tabs saving near-simultaneously
+// can't clobber each other's read-modify-write cycle.
+function saveResult(type, answered, reflection) {
+  return new Promise((resolve) => {
+    let settled = false;
 
-    if (type === 'LOOKUP') {
-      stats.lookupTasks++;
-    } else {
-      stats.thinkingTasks++;
-      if (answered) {
-        stats.answered++;
-        // Update streak
-        const today = new Date().toDateString();
-        if (stats.lastAnswerDate !== today) {
-          const yesterday = new Date(Date.now() - 86400000).toDateString();
-          stats.streak = stats.lastAnswerDate === yesterday ? stats.streak + 1 : 1;
-          stats.lastAnswerDate = today;
-        }
-      } else {
-        stats.skipped++;
-        // Skipping does NOT break the streak — only counts as a missed opportunity
-      }
+    function done(ok) {
+      if (settled) return;
+      settled = true;
+      try { port.disconnect(); } catch (_) {}
+      resolve(ok);
     }
 
-    // Prepend log entry (no prompt content stored)
-    log.unshift({
-      type,
-      answered: type === 'THINKING' ? answered : null,
-      site: location.hostname,
-      ts: Date.now(),
+    const fallback = setTimeout(() => {
+      console.warn('[TryFirst] saveResult() timed out waiting for ack');
+      done(false);
+    }, 4000);
+
+    let port;
+    try {
+      port = chrome.runtime.connect({ name: 'saveResult' });
+    } catch (err) {
+      console.warn('[TryFirst] saveResult connect() failed:', err.message);
+      clearTimeout(fallback);
+      resolve(false);
+      return;
+    }
+
+    port.onMessage.addListener((msg) => {
+      clearTimeout(fallback);
+      done(!!msg.ok);
     });
 
-    chrome.storage.local.set({
-      stats,
-      activityLog: log.slice(0, 100),
+    port.onDisconnect.addListener(() => {
+      clearTimeout(fallback);
+      if (!settled) {
+        console.warn('[TryFirst] saveResult port disconnected before ack (write may still have committed in the background)');
+        done(false);
+      }
+    });
+
+    port.postMessage({
+      type: 'saveResult',
+      result: type,
+      answered,
+      site: location.hostname,
+      reflection: reflection || null,
     });
   });
 }
@@ -327,17 +333,18 @@ function showThinkingPopup(onDecision) {
   // Animate in
   requestAnimationFrame(() => popup.classList.add('tf-visible'));
 
-  function dismiss(answered) {
+  function dismiss(answered, reflection) {
     popup.classList.remove('tf-visible');
     setTimeout(() => {
       popup.remove();
       popupVisible = false;
     }, 280);
-    onDecision(answered);
+    onDecision(answered, reflection);
   }
 
   document.getElementById('tf-popup-submit').addEventListener('click', () => {
-    dismiss(true);
+    const ta = document.getElementById('tf-popup-input');
+    dismiss(true, (ta?.value || '').trim());
   });
 
   document.getElementById('tf-popup-skip').addEventListener('click', () => {
@@ -376,8 +383,8 @@ async function handleInterceptEvent(e, refire) {
       refire();
     } else {
       // THINKING task
-      showThinkingPopup((answered) => {
-        saveResult('THINKING', answered);
+      showThinkingPopup((answered, reflection) => {
+        saveResult('THINKING', answered, reflection);
         refire();
       });
     }

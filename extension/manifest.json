@@ -15,7 +15,13 @@
     {
       "matches": [
         "*://chatgpt.com/*",
-        "*://chat.openai.com/*"
+        "*://chat.openai.com/*",
+        "*://claude.ai/*",
+        "*://gemini.google.com/*",
+        "*://copilot.microsoft.com/*",
+        "*://perplexity.ai/*",
+        "*://poe.com/*",
+        "*://character.ai/*"
       ],
       "js": ["content.js"],
       "css": ["overlay.css"],
