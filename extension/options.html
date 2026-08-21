@@ -203,7 +203,7 @@
     <div class="card">
       <div class="card-title">Anthropic API Key</div>
       <p class="card-desc">
-        Get your key at <a href="https://console.anthropic.com/account/keys" target="_blank">console.anthropic.com</a>. The extension uses <strong>claude-3-5-haiku-20241022</strong>, the fastest, cheapest model, for sub-second classification. A typical month of daily use costs pennies.
+        Get your key at <a href="https://console.anthropic.com/account/keys" target="_blank">console.anthropic.com</a>. The extension uses <strong>claude-haiku-4-5</strong>, the fastest, cheapest model, for sub-second classification. A typical month of daily use costs pennies.
       </p>
       <label for="api-key-input">API Key</label>
       <div class="input-row">
@@ -223,6 +223,7 @@
         <li>Your API key is stored only in your browser via <code>chrome.storage.local</code>, never uploaded anywhere.</li>
         <li>Only the text of your prompt is sent to the Anthropic API for classification. No site data, cookies, or identity.</li>
         <li>The actual prompt content is <strong>never stored</strong> by this extension, only the result (THINKING or LOOKUP).</li>
+        <li>If you write your own reasoning in the "Your thinking…" popup, that note is stored locally only, same as your stats and history.</li>
         <li>All your stats and history live entirely on your device.</li>
       </ul>
     </div>
