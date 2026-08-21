@@ -9,20 +9,102 @@ const CLASSIFIER_SYSTEM = `You are a classifier. A user is about to send this pr
 // The content script opens a port (chrome.runtime.connect) which
 // keeps the SW alive for the duration of the connection.
 chrome.runtime.onConnect.addListener((port) => {
-  if (port.name !== 'classifier') return;
+  if (port.name === 'classifier') {
+    port.onMessage.addListener(async (msg) => {
+      if (msg.type !== 'classify') return;
 
-  port.onMessage.addListener(async (msg) => {
-    if (msg.type !== 'classify') return;
+      try {
+        const result = await classifyPrompt(msg.text);
+        port.postMessage({ result });
+      } catch (err) {
+        console.warn('[TryFirst SW] classify error:', err.message);
+        try {
+          port.postMessage({ result: 'LOOKUP' });
+        } catch (fallbackErr) {
+          console.warn('[TryFirst SW] fallback postMessage failed, port likely closed:', fallbackErr.message);
+        }
+      }
+    });
+    return;
+  }
 
-    try {
-      const result = await classifyPrompt(msg.text);
-      port.postMessage({ result });
-    } catch (err) {
-      console.warn('[TryFirst SW] classify error:', err.message);
-      port.postMessage({ result: 'LOOKUP' });
-    }
-  });
+  if (port.name === 'saveResult') {
+    port.onMessage.addListener((msg) => {
+      if (msg.type !== 'saveResult') return;
+
+      queueSaveResult(msg.result, msg.answered, msg.site, msg.reflection)
+        .then(() => {
+          try {
+            port.postMessage({ ok: true });
+          } catch (ackErr) {
+            console.warn('[TryFirst SW] saveResult ack failed, port likely closed (write already committed):', ackErr.message);
+          }
+        })
+        .catch((err) => {
+          console.warn('[TryFirst SW] saveResult write failed:', err.message);
+          try { port.postMessage({ ok: false }); } catch (_) {}
+        });
+    });
+  }
 });
+
+// ── Stats/activity writer — serialized so concurrent tabs can't ─
+// clobber each other's read-modify-write cycle on chrome.storage.local.
+let statsQueue = Promise.resolve();
+
+function queueSaveResult(type, answered, site, reflection) {
+  const run = statsQueue.then(() => saveResultToStorage(type, answered, site, reflection));
+  statsQueue = run.catch(() => {}); // keep the chain alive even if one write throws
+  return run;
+}
+
+async function saveResultToStorage(type, answered, site, reflection) {
+  const data = await chrome.storage.local.get(['stats', 'activityLog']);
+  const stats = data.stats || {
+    thinkingTasks : 0,
+    lookupTasks   : 0,
+    answered      : 0,
+    skipped       : 0,
+    streak        : 0,
+    lastAnswerDate: '',
+  };
+  const log = data.activityLog || [];
+
+  if (type === 'LOOKUP') {
+    stats.lookupTasks++;
+  } else {
+    stats.thinkingTasks++;
+    if (answered) {
+      stats.answered++;
+      // Update streak
+      const today = new Date().toDateString();
+      if (stats.lastAnswerDate !== today) {
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+        stats.streak = stats.lastAnswerDate === yesterday ? stats.streak + 1 : 1;
+        stats.lastAnswerDate = today;
+      }
+    } else {
+      stats.skipped++;
+      // Skipping does NOT break the streak — only counts as a missed opportunity
+    }
+  }
+
+  // Prepend log entry (no prompt content stored)
+  const entry = {
+    type,
+    answered: type === 'THINKING' ? answered : null,
+    site,
+    ts: Date.now(),
+  };
+  if (reflection) entry.reflection = reflection.trim().slice(0, 500);
+
+  log.unshift(entry);
+
+  await chrome.storage.local.set({
+    stats,
+    activityLog: log.slice(0, 100),
+  });
+}
 
 // ── Also keep the one-shot listener for options page key check ─
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -53,7 +135,7 @@ async function classifyPrompt(text) {
       'anthropic-dangerous-direct-browser-access': 'true',
     },
     body: JSON.stringify({
-      model: 'claude-3-5-haiku-20241022',
+      model: 'claude-haiku-4-5',
       max_tokens: 5,
       system: CLASSIFIER_SYSTEM,
       messages: [{ role: 'user', content: prompt }],
