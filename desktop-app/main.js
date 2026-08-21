@@ -18,14 +18,25 @@ function loadData() {
     if (fs.existsSync(DATA_PATH)) {
       return JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
     }
-  } catch (_) {}
+  } catch (_) {
+    // Corrupt/truncated file — preserve it for inspection instead of
+    // silently discarding it, then fall through to the default state.
+    try {
+      fs.renameSync(DATA_PATH, `${DATA_PATH}.corrupt-${Date.now()}`);
+    } catch (_) {}
+  }
   return { settings: { dailyLimitMinutes: 120 }, today: null, history: [] };
 }
 
 function saveData(data) {
   try {
     fs.mkdirSync(path.dirname(DATA_PATH), { recursive: true });
-    fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
+    // Write to a temp file and rename into place — rename is atomic on the
+    // same filesystem, so a crash/power-loss mid-write can't leave DATA_PATH
+    // truncated or half-written.
+    const tmpPath = `${DATA_PATH}.tmp`;
+    fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2));
+    fs.renameSync(tmpPath, DATA_PATH);
   } catch (_) {}
 }
 
@@ -177,7 +188,7 @@ function scheduleDailySummary() {
         .join(' · ');
       notify(`Daily Summary, ${mins} min total`, lines);
     }
-    setTimeout(fire, 24 * 60 * 60 * 1000); // repeat each day
+    setTimeout(fire, msUntil10pm()); // recompute against 10pm each time, don't just add 24h
   }, msUntil10pm());
 }
 
