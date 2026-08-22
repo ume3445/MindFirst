@@ -19,7 +19,7 @@
   <main>
     <div class="legal-wrap">
       <div class="legal-header">
-        <p class="legal-updated">Last updated: April 2026</p>
+        <p class="legal-updated">Last updated: August 2026</p>
         <h1>Privacy Policy</h1>
         <p class="legal-intro">MindFirst is built on a simple principle: your data belongs to you. This policy explains exactly what we collect, why, and what we never do with it.</p>
       </div>
@@ -30,8 +30,12 @@
           <h2>1. What we collect</h2>
           <h3>Email address (waitlist)</h3>
           <p>If you submit your email to join the waitlist, we store it to notify you when features go live. We do not share, sell, or rent your email to any third party. Ever.</p>
+          <h3>Prompt classification</h3>
+          <p>To decide whether a prompt you're about to send to an AI is a "thinking" task or a "lookup" task, the Try First extension sends the prompt text (up to 600 characters) to a classification service. By default this is MindFirst's own classification backend, running on Cloudflare Workers, and the request includes a randomly generated installation ID, not your name, email, or any other identifier, so we can enforce a free daily usage limit per install. The prompt text is used only to return a classification and is not stored on MindFirst's servers.</p>
+          <p>If you've reached your free daily limit and have saved your own Anthropic API key in the extension's settings, further classifications that day are sent directly from your browser to Anthropic's API instead, using your own key. In that case your prompt text goes to Anthropic, not to MindFirst, governed by <a href="https://www.anthropic.com/legal/privacy" target="_blank">Anthropic's privacy policy</a>.</p>
+          <p>The prompt text itself is never written to your device's storage, by MindFirst or by the extension, either. It exists only in memory for the moment it takes to classify it, then is discarded.</p>
           <h3>Extension data (local only)</h3>
-          <p>The Try First browser extension stores all data, your thinking streaks, session history, and category logs, locally in your browser using <code>chrome.storage.local</code>. This data <strong>never leaves your device</strong> and is never transmitted to our servers or any third party.</p>
+          <p>Everything else the extension tracks, your thinking streaks, session history, activity log, any optional reflection notes you type in the "Your thinking…" popup, and your own saved Anthropic API key (if you add one), is stored locally in your browser using <code>chrome.storage.local</code>. This data never leaves your device and is never transmitted to MindFirst's servers or any third party. Your saved API key is only ever sent to Anthropic directly, when you personally trigger the fallback described above, never to MindFirst.</p>
           <h3>Quiz results</h3>
           <p>The AI Literacy Score quiz runs entirely in your browser. Your answers and score are not stored on our servers. Nothing is sent anywhere when you complete the test.</p>
           <h3>Roast tool</h3>
@@ -54,12 +58,14 @@
         <div class="legal-section">
           <h2>3. Third-party services</h2>
           <p>MindFirst is hosted on <strong>Netlify</strong>. Netlify may collect standard server logs (IP addresses, request timestamps) as part of their infrastructure. See <a href="https://www.netlify.com/privacy/" target="_blank">Netlify's privacy policy</a> for details.</p>
-          <p>No advertising networks, analytics platforms (Google Analytics, Mixpanel, etc.), or data brokers are used on this site.</p>
+          <p>The Try First extension's default classification runs on <strong>Cloudflare Workers</strong>, operated by MindFirst. Cloudflare, as our infrastructure provider, may retain standard connection-level logs (such as IP address) as part of running that service. See <a href="https://www.cloudflare.com/privacypolicy/" target="_blank">Cloudflare's privacy policy</a> for details.</p>
+          <p>If you add your own Anthropic API key and exceed the free daily limit, further classification requests are sent directly to <strong>Anthropic</strong>. See <a href="https://www.anthropic.com/legal/privacy" target="_blank">Anthropic's privacy policy</a> for details.</p>
+          <p>No advertising networks, analytics platforms (Google Analytics, Mixpanel, etc.), or data brokers are used on this site or in the extension.</p>
         </div>
 
         <div class="legal-section">
           <h2>4. Data retention</h2>
-          <p>Waitlist email addresses are retained until you request deletion or we shut down the waitlist. Extension and log data lives in your browser until you clear it manually.</p>
+          <p>Waitlist email addresses are retained until you request deletion or we shut down the waitlist. Extension and log data lives in your browser until you clear it manually. The randomly generated installation ID used for free-tier classification is stored in your browser the same way, and is retained on MindFirst's classification backend only as needed to enforce the daily limit; prompt text sent for classification is not retained by MindFirst.</p>
         </div>
 
         <div class="legal-section">
