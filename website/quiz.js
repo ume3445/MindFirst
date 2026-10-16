@@ -1,145 +1,695 @@
-const QUESTIONS = [
+const CATEGORY_LABELS = {"hallucination": "Hallucination", "bias": "Bias", "reasoning": "Flawed Reasoning", "overconfidence": "Overconfidence", "incomplete": "Missing Context"};
+
+// Question pool: 6 per category. Each run draws 2 per category, shuffles the
+// question order and the answer order, so no two runs look the same.
+const QUESTION_POOL = [
   {
-    id: 1,
-    category: "hallucination",
-    categoryLabel: "Hallucination",
-    aiResponse: "Albert Einstein won the Nobel Prize in Physics in 1921 for his discovery of the photoelectric effect. He also won his first Nobel Prize in 1905, the same year he published his groundbreaking papers on relativity and Brownian motion.",
-    question: "What is wrong with this AI response?",
-    options: [
-      { letter: "A", text: "Einstein didn't win a Nobel Prize at all." },
-      { letter: "B", text: "Einstein won in 1921 but did NOT win in 1905. The AI fabricated a second Nobel Prize that never existed.", correct: true },
-      { letter: "C", text: "Einstein didn't discover the photoelectric effect." },
-      { letter: "D", text: "The theory of relativity was published in 1906, not 1905." },
+    "category": "hallucination",
+    "categoryLabel": "Hallucination",
+    "aiResponse": "Albert Einstein won the Nobel Prize in Physics in 1921 for his discovery of the photoelectric effect. He also won his first Nobel Prize in 1905, the same year he published his papers on relativity and Brownian motion.",
+    "question": "What is wrong with this AI response?",
+    "options": [
+      {
+        "text": "The 1905 Nobel Prize is invented. He won once, in 1921.",
+        "correct": true
+      },
+      {
+        "text": "The 1921 prize was for relativity, not the photoelectric effect."
+      },
+      {
+        "text": "Physics Nobels were not awarded until the 1920s."
+      },
+      {
+        "text": "Brownian motion was published in 1906, not 1905."
+      }
     ],
-    explanation: "✓ Correct. Einstein won exactly one Nobel Prize, in 1921. The AI confidently fabricated a 1905 prize. This is a classic hallucination: inventing plausible-sounding facts that are completely false."
+    "explanation": "Einstein won a single Nobel Prize, in 1921. The 1905 prize was made up to sit next to a real date, which is typical of a hallucination: a true fact padded with a false one that fits the story. The other options sound reasonable, but each one is itself false."
   },
   {
-    id: 2,
-    category: "hallucination",
-    categoryLabel: "Hallucination",
-    aiResponse: "The Great Wall of China is clearly visible from space with the naked eye. This has been confirmed by multiple astronauts, including Neil Armstrong, who mentioned spotting it during the Apollo 11 mission in 1969.",
-    question: "What is the problem with this AI response?",
-    options: [
-      { letter: "A", text: "The Great Wall was not built in China." },
-      { letter: "B", text: "The Apollo 11 mission didn't reach orbit." },
-      { letter: "C", text: "The AI fabricated Neil Armstrong's quote. Armstrong never claimed this, and the Great Wall is not visible from space with the naked eye.", correct: true },
-      { letter: "D", text: "The Great Wall was demolished before 1969." },
+    "category": "hallucination",
+    "categoryLabel": "Hallucination",
+    "aiResponse": "According to a 2019 Stanford study by Dr. Helen Marchetti, published in Nature, people who drink two liters of water before bed improve their memory retention by 41%.",
+    "question": "What should you do before trusting this?",
+    "options": [
+      {
+        "text": "Look the study up. AI tools often invent specific-sounding citations.",
+        "correct": true
+      },
+      {
+        "text": "Nothing. Nature only publishes verified research, so it can be trusted as is."
+      },
+      {
+        "text": "Ask the AI again and trust the claim if it gives the same answer."
+      },
+      {
+        "text": "Check whether the 41% figure is statistically significant first."
+      }
     ],
-    explanation: "✓ Correct. Both claims are false. The Great Wall is too narrow (~30 feet) to be seen from orbit, and Neil Armstrong never said he saw it. The AI stated a popular myth as confirmed fact and invented a supporting quote, a hallucination."
+    "explanation": "Names, journals, years and exact percentages make a claim feel checked, but language models can generate all of them without any source behind them. Asking again does not help, because a model can repeat the same invented citation. Whether the number is significant only matters after you know the study exists."
   },
   {
-    id: 3,
-    category: "bias",
-    categoryLabel: "Bias",
-    aiResponse: "When hiring for a software engineering role, prioritize candidates from top-tier universities like MIT, Stanford, or Carnegie Mellon. These graduates have proven track records and will be better equipped for the technical demands of the role.",
-    question: "What is the main issue with this AI response?",
-    options: [
-      { letter: "A", text: "Software engineers don't need technical skills." },
-      { letter: "B", text: "The AI shows institutional bias, excluding self-taught developers, bootcamp graduates, and people from non-elite schools who may be equally or more capable.", correct: true },
-      { letter: "C", text: "MIT, Stanford, and Carnegie Mellon don't offer CS degrees." },
-      { letter: "D", text: "The AI should have mentioned salary negotiation." },
+    "category": "hallucination",
+    "categoryLabel": "Hallucination",
+    "aiResponse": "To sort a list of users by age in Python, call users.sortBy(key=lambda u: u.age). It sorts the list in place.",
+    "question": "What is the issue?",
+    "options": [
+      {
+        "text": "Python lists have no sortBy method. The real one is sort.",
+        "correct": true
+      },
+      {
+        "text": "Python lists can't be sorted in place; sorted() returns a new list."
+      },
+      {
+        "text": "The key argument must be a string naming an attribute, not a lambda."
+      },
+      {
+        "text": "sortBy only exists on tuples, so the list needs converting first."
+      }
     ],
-    explanation: "✓ Correct. This is institutional bias. Many exceptional engineers are self-taught or come from non-elite schools. Presenting prestige as a proxy for ability systematically excludes talented people and reinforces existing inequalities."
+    "explanation": "The AI mixed in a method name from another language (sortBy is JavaScript and Scala territory). Invented API calls are one of the most common coding hallucinations, and they read as natural. Run the code, or check the docs, before you build on it."
   },
   {
-    id: 4,
-    category: "bias",
-    categoryLabel: "Bias",
-    aiResponse: "Research shows that men are naturally better at spatial reasoning and mathematics, which explains the higher proportion of men in STEM fields. Women tend to be more naturally suited to communication-heavy and social roles.",
-    question: "What is wrong with this AI response?",
-    options: [
-      { letter: "A", text: "Men are not represented in STEM fields." },
-      { letter: "B", text: "The AI presents gender stereotypes as scientific consensus, ignoring socialization, structural barriers, and the vast overlap between groups.", correct: true },
-      { letter: "C", text: "Spatial reasoning is not used in mathematics." },
-      { letter: "D", text: "The AI forgot to cite its sources." },
+    "category": "hallucination",
+    "categoryLabel": "Hallucination",
+    "aiResponse": "As Mark Twain famously said, \"The definition of insanity is doing the same thing over and over and expecting different results.\"",
+    "question": "What is the most defensible criticism of this?",
+    "options": [
+      {
+        "text": "It is a popular misattribution. No reliable source ties it to Twain.",
+        "correct": true
+      },
+      {
+        "text": "Twain never wrote about insanity at all, so the quote is fabricated."
+      },
+      {
+        "text": "The quote is genuine, but the AI should have named the book it came from."
+      },
+      {
+        "text": "It belongs to Einstein, who said it in a 1950 interview."
+      }
     ],
-    explanation: "✓ Correct. While some studies show small average differences, presenting this as 'natural' ignores decades of research on socialization, stereotype threat, and systemic bias. The AI is laundering stereotypes as science."
+    "explanation": "Quote researchers have found no source for this line from Twain, and the usual alternative, Einstein, is just as unsupported. Saying Twain never wrote about insanity goes further than the evidence does. Be wary of any \"famously said\" line that the AI delivers without a source."
   },
   {
-    id: 5,
-    category: "reasoning",
-    categoryLabel: "Flawed Reasoning",
-    aiResponse: "Ice cream sales spike every summer. Drowning incidents also spike every summer. The data clearly shows a strong correlation, which means eating ice cream increases the risk of drowning.",
-    question: "What logical error is the AI making?",
-    options: [
-      { letter: "A", text: "Ice cream sales don't actually increase in summer." },
-      { letter: "B", text: "The AI is confusing correlation with causation. Both share a common cause, hot weather, but ice cream does not cause drowning.", correct: true },
-      { letter: "C", text: "Drowning incidents don't happen in summer." },
-      { letter: "D", text: "The AI should have recommended swimming lessons instead." },
+    "category": "hallucination",
+    "categoryLabel": "Hallucination",
+    "aiResponse": "In Henderson v. Pacific Rail Co. (1987), the Supreme Court ruled that employees cannot be fired for refusing to work on holidays. You can cite this in your complaint.",
+    "question": "What is the biggest risk in using this?",
+    "options": [
+      {
+        "text": "The case may not exist. Lawyers have been sanctioned for citing fake ones.",
+        "correct": true
+      },
+      {
+        "text": "A ruling from 1987 is too old to still count as valid law."
+      },
+      {
+        "text": "Employment rulings only apply in the state where they were decided."
+      },
+      {
+        "text": "It leaves out the page number of the opinion, which makes it unusable."
+      }
     ],
-    explanation: "✓ Correct. This is the classic correlation vs. causation fallacy. Hot weather causes both more ice cream consumption AND more swimming (and drowning). The AI ignored the confounding variable entirely."
+    "explanation": "AI tools have produced convincing case names, courts and holdings that do not exist, and lawyers have been fined for filing them. Older rulings are still precedent unless overturned. Verify any citation in a real legal database before you rely on it."
   },
   {
-    id: 6,
-    category: "reasoning",
-    categoryLabel: "Flawed Reasoning",
-    aiResponse: "Ancient Romans used lead pipes extensively, and historians believe lead poisoning contributed to Rome's decline. This confirms that all ancient civilizations that relied heavily on metal infrastructure eventually collapsed because of metal toxicity.",
-    question: "What is wrong with this reasoning?",
-    options: [
-      { letter: "A", text: "Romans did not use lead pipes." },
-      { letter: "B", text: "The AI overgeneralizes. It takes one specific case and incorrectly applies it as a universal rule to all civilizations without supporting evidence.", correct: true },
-      { letter: "C", text: "Metal toxicity is not harmful to humans." },
-      { letter: "D", text: "The Roman Empire never fell." },
+    "category": "hallucination",
+    "categoryLabel": "Hallucination",
+    "aiResponse": "Humans only use about 10% of their brains. Unlocking the other 90% is the key to better focus and memory.",
+    "question": "What is wrong with this response?",
+    "options": [
+      {
+        "text": "It repeats a myth. Brain scans show activity across the whole brain.",
+        "correct": true
+      },
+      {
+        "text": "The real figure is closer to 30%, so the AI's number is just outdated."
+      },
+      {
+        "text": "The claim holds for adults over 40, whose brain use declines sharply."
+      },
+      {
+        "text": "The claim is true on average, but people in intellectual jobs use more."
+      }
     ],
-    explanation: "✓ Correct. This is a hasty generalization, taking one specific, debated example (Rome) and drawing a sweeping universal conclusion about all civilizations. Many metal-using civilizations thrived for centuries."
+    "explanation": "The 10% idea is a long-running myth. Scans and damage studies show that nearly every region is active over the course of a day. Models repeat myths like this because they appear so often in the text they learned from. Fixing the number, as one option does, still leaves the myth in place."
   },
   {
-    id: 7,
-    category: "overconfidence",
-    categoryLabel: "Overconfidence",
-    aiResponse: "The stock market will definitely rise 15–20% next year. Inflation is cooling, interest rates are stabilizing, and consumer spending is strong. Based on these indicators, this outcome is a near certainty.",
-    question: "What is the problem with this AI response?",
-    options: [
-      { letter: "A", text: "The stock market never rises year over year." },
-      { letter: "B", text: "Inflation and interest rates have no effect on markets." },
-      { letter: "C", text: "The AI expresses false certainty about an inherently unpredictable system. No one can 'definitely' predict market movements.", correct: true },
-      { letter: "D", text: "The AI should have recommended bonds instead." },
+    "category": "bias",
+    "categoryLabel": "Bias",
+    "aiResponse": "When hiring for a software engineering role, prioritize candidates from top-tier universities like MIT, Stanford, or Carnegie Mellon. These graduates have proven track records and will be better equipped for the technical demands.",
+    "question": "What is the main issue with this advice?",
+    "options": [
+      {
+        "text": "Prestige is used as a stand-in for ability, which screens out capable people.",
+        "correct": true
+      },
+      {
+        "text": "Graduates of elite schools actually perform worse, so the advice is backwards."
+      },
+      {
+        "text": "It names only three universities when it should name at least ten."
+      },
+      {
+        "text": "It never asks about the company's size, so the advice is too generic."
+      }
     ],
-    explanation: "✓ Correct. Markets are complex, emergent systems. Using words like 'definitely' and 'near certainty' for market predictions is dangerous overconfidence. Even the best economists and fund managers consistently fail to predict short-term movements."
+    "explanation": "Prestige correlates with ability, but it is a weak filter that excludes self-taught developers, bootcamp graduates and state-school graduates. The advice is not factually absurd, which is why bias like this slips by."
   },
   {
-    id: 8,
-    category: "overconfidence",
-    categoryLabel: "Overconfidence",
-    aiResponse: "Based on your symptoms of fatigue and persistent headaches, you almost certainly have iron deficiency anemia. You should begin taking iron supplements immediately to resolve this.",
-    question: "What is the core problem with this response?",
-    options: [
-      { letter: "A", text: "Iron deficiency cannot cause fatigue or headaches." },
-      { letter: "B", text: "The AI is dangerously overconfident. Fatigue and headaches have dozens of possible causes. A diagnosis requires a doctor and blood tests.", correct: true },
-      { letter: "C", text: "Iron supplements are always harmful." },
-      { letter: "D", text: "The AI should have recommended surgery." },
+    "category": "bias",
+    "categoryLabel": "Bias",
+    "aiResponse": "Research shows men are naturally better at spatial reasoning and math, which explains the higher proportion of men in STEM. Women tend to be more naturally suited to communication-heavy roles.",
+    "question": "What is wrong with this response?",
+    "options": [
+      {
+        "text": "It turns small average gaps into innate ability, ignoring socialization.",
+        "correct": true
+      },
+      {
+        "text": "It cites no specific studies, so none of the claims can be checked."
+      },
+      {
+        "text": "Men and women score identically on every cognitive measure, so the claim is false."
+      },
+      {
+        "text": "AI should not discuss any differences between groups at all."
+      }
     ],
-    explanation: "✓ Correct. Fatigue and headaches are among the most non-specific symptoms in medicine. They could indicate dozens of conditions. Confidently diagnosing anemia and recommending supplements without testing could mask a serious underlying condition."
+    "explanation": "Some studies do find small average gaps on some tasks, but the response turns that into \"natural\" ability and a career verdict for individuals. Saying there are no differences at all, as one option does, is also an overclaim. The problem is the leap from averages to destiny."
   },
   {
-    id: 9,
-    category: "incomplete",
-    categoryLabel: "Missing Context",
-    aiResponse: "Coffee is bad for your health. It raises blood pressure, disrupts sleep, and causes anxiety. You should avoid drinking it.",
-    question: "What is missing from this AI response?",
-    options: [
-      { letter: "A", text: "Coffee doesn't contain caffeine." },
-      { letter: "B", text: "The response lacks nuance. Moderate coffee consumption is associated with health benefits for most people. The answer ignores dosage, individual variation, and contradictory evidence.", correct: true },
-      { letter: "C", text: "The AI should have recommended a specific brand of coffee." },
-      { letter: "D", text: "Blood pressure and sleep are not related to health." },
+    "category": "bias",
+    "categoryLabel": "Bias",
+    "aiResponse": "Both candidates have a computer science degree and five years of backend experience. Emily Walsh seems like the better cultural fit, so I'd move her forward over Lakisha Washington.",
+    "question": "What is the problem here?",
+    "options": [
+      {
+        "text": "It ranks on something unrelated to the job when the qualifications match.",
+        "correct": true
+      },
+      {
+        "text": "Cultural fit should never be considered when hiring anyone."
+      },
+      {
+        "text": "It should have asked for a cover letter before comparing them."
+      },
+      {
+        "text": "Two candidates with identical experience cannot be meaningfully compared."
+      }
     ],
-    explanation: "✓ Correct. Research on coffee is nuanced. Moderate consumption (2–4 cups/day) is associated with reduced risk of Parkinson's, type 2 diabetes, and liver disease for most people. Blanket 'avoid it' advice ignores dosage, individual sensitivity, and the broader evidence base."
+    "explanation": "Audit studies have repeatedly found that identical resumes get different responses depending on the name at the top. \"Cultural fit\" is vague enough to hide that. Asking what evidence the AI used, and getting none, is a good test."
   },
   {
-    id: 10,
-    category: "incomplete",
-    categoryLabel: "Missing Context",
-    aiResponse: "Napoleon Bonaparte was famously short, standing at just 5'2\". His small stature gave him a well-documented inferiority complex that historians agree drove his aggressive military campaigns.",
-    question: "What is wrong with this response?",
-    options: [
-      { letter: "A", text: "Napoleon was actually over 6 feet tall." },
-      { letter: "B", text: "The '5'2\"' claim is historically inaccurate (Napoleon was ~5'7\", average for his era), and calling his psychology 'well-documented' presents speculation as established fact.", correct: true },
-      { letter: "C", text: "Napoleon never led military campaigns." },
-      { letter: "D", text: "The AI should have mentioned Waterloo." },
+    "category": "bias",
+    "categoryLabel": "Bias",
+    "aiResponse": "Always tip 20% at restaurants. It's the standard everywhere, and skipping it is rude.",
+    "question": "What hidden assumption is in this advice?",
+    "options": [
+      {
+        "text": "It assumes US norms apply worldwide. In many countries tipping is optional.",
+        "correct": true
+      },
+      {
+        "text": "20% is too low, since 25% is now the standard in most places."
+      },
+      {
+        "text": "Tipping is illegal in most countries, so the advice could get you fined."
+      },
+      {
+        "text": "You should tip in cash rather than on a card, in all cases."
+      }
     ],
-    explanation: "✓ Correct. The 'short Napoleon' myth came from a unit conversion error (French inches vs. English inches). He was about 5'7\", average for his time. The psychological explanation is also pop-psychology speculation, not historical consensus. The AI presented both as fact."
+    "explanation": "Much AI training text comes from US sources, so US customs come out as defaults. The word \"everywhere\" is the giveaway. Norms in Japan, much of Europe and elsewhere differ a lot, and tipping is not illegal in most places."
+  },
+  {
+    "category": "bias",
+    "categoryLabel": "Bias",
+    "aiResponse": "Older employees tend to struggle with new technology, so for the software rollout, assign the training sessions mainly to younger staff.",
+    "question": "What is the main problem?",
+    "options": [
+      {
+        "text": "It uses age as a stand-in for skill instead of assessing individual people.",
+        "correct": true
+      },
+      {
+        "text": "Training should be identical for every employee regardless of their role."
+      },
+      {
+        "text": "Younger staff tend to make worse trainers, so it picked the wrong group."
+      },
+      {
+        "text": "A rollout shouldn't include formal training sessions in the first place."
+      }
+    ],
+    "explanation": "Plenty of older employees are quick with new tools, and plenty of younger ones are not. Treating a group stereotype as a fact about each person is how bias shows up in workplace advice. The fix is to assess skills directly."
+  },
+  {
+    "category": "bias",
+    "categoryLabel": "Bias",
+    "aiResponse": "We surveyed 500 Twitter users and found that 80% of Americans support the new policy.",
+    "question": "What is the flaw in this conclusion?",
+    "options": [
+      {
+        "text": "Users of one platform are not a random sample of all Americans.",
+        "correct": true
+      },
+      {
+        "text": "Opinion surveys cannot measure support for specific policies."
+      },
+      {
+        "text": "A sample of 500 is always too small to say anything useful."
+      },
+      {
+        "text": "80% is too high a number for any poll to be believable."
+      }
+    ],
+    "explanation": "This is selection bias. People on one platform differ from the general public in age, politics and how often they post. A well-drawn sample of 500 can be accurate to within a few points, so size is not the issue here. Who got asked is."
+  },
+  {
+    "category": "reasoning",
+    "categoryLabel": "Flawed Reasoning",
+    "aiResponse": "Ice cream sales spike every summer, and so do drownings. The data shows a strong correlation, which means eating ice cream raises the risk of drowning.",
+    "question": "What logical error is the AI making?",
+    "options": [
+      {
+        "text": "It reads correlation as causation. Hot weather drives both.",
+        "correct": true
+      },
+      {
+        "text": "Ice cream sales and drownings are not really correlated."
+      },
+      {
+        "text": "Drownings are too rare an event to support any statistical conclusion."
+      },
+      {
+        "text": "The correlation is real but weak, so it should say 'might' instead of 'raises'."
+      }
+    ],
+    "explanation": "A hidden third factor, summer heat, pushes up both numbers. Without ruling out confounders, a correlation cannot support a causal claim. Hedging the wording, as one option suggests, would not fix the logic."
+  },
+  {
+    "category": "reasoning",
+    "categoryLabel": "Flawed Reasoning",
+    "aiResponse": "Lead pipes were used heavily in ancient Rome, and some historians think lead exposure contributed to its decline. So any civilization that used lead plumbing was doomed to collapse.",
+    "question": "What is wrong with this reasoning?",
+    "options": [
+      {
+        "text": "One debated case is stretched into a universal rule about every civilization.",
+        "correct": true
+      },
+      {
+        "text": "Rome never used lead pipes at scale, so the premise is wrong."
+      },
+      {
+        "text": "Historians have already proven the lead theory false, so it should not be cited."
+      },
+      {
+        "text": "Lead can only harm individuals, so it cannot explain a whole society's decline."
+      }
+    ],
+    "explanation": "This is a hasty generalization. Even if the Rome theory is right, a single case does not support \"all\" civilizations, and several societies used lead and lasted for centuries."
+  },
+  {
+    "category": "reasoning",
+    "categoryLabel": "Flawed Reasoning",
+    "aiResponse": "You can only break into tech by attending a coding bootcamp. You do not have $15,000, so you should give up on a tech career.",
+    "question": "Which reasoning flaw is this?",
+    "options": [
+      {
+        "text": "False dilemma. It ignores degrees, self-study, internships and other routes.",
+        "correct": true
+      },
+      {
+        "text": "Circular reasoning. It assumes the very thing it is trying to prove."
+      },
+      {
+        "text": "Appeal to authority. It leans on what bootcamps say about themselves."
+      },
+      {
+        "text": "Slippery slope. It predicts a chain of ever-worse events with no evidence."
+      }
+    ],
+    "explanation": "The argument presents two options, bootcamp or nothing, when many other paths exist. The other fallacy names are real, but none of them describes what happens here, which is a short list of options passed off as the whole list."
+  },
+  {
+    "category": "reasoning",
+    "categoryLabel": "Flawed Reasoning",
+    "aiResponse": "Steve Jobs, Bill Gates and Mark Zuckerberg all dropped out of college and became billionaires. Dropping out is clearly a strong path to success.",
+    "question": "What is the flaw?",
+    "options": [
+      {
+        "text": "Survivorship bias. The failures who also dropped out are invisible.",
+        "correct": true
+      },
+      {
+        "text": "Post hoc reasoning. It assumes that dropping out came after the success."
+      },
+      {
+        "text": "Straw man. It misstates what those founders have said about school."
+      },
+      {
+        "text": "Ad hominem. It attacks people who chose to stay in college instead."
+      }
+    ],
+    "explanation": "Only the successes get remembered, so the sample is rigged. To judge dropping out you would need the outcomes of everyone who did it, and most never make headlines."
+  },
+  {
+    "category": "reasoning",
+    "categoryLabel": "Flawed Reasoning",
+    "aiResponse": "A bat and a ball cost $1.10 together. The bat costs $1.00 more than the ball. So the ball costs 10 cents.",
+    "question": "What went wrong?",
+    "options": [
+      {
+        "text": "The ball costs 5 cents. The answer fails the second condition.",
+        "correct": true
+      },
+      {
+        "text": "The ball costs 15 cents once tax on the total is included."
+      },
+      {
+        "text": "Nothing is wrong. If the bat is $1.00, the ball is 10 cents."
+      },
+      {
+        "text": "The puzzle has no unique answer, so any price could be right."
+      }
+    ],
+    "explanation": "If the ball were 10 cents, the bat would be $1.10 and the total $1.20. The intuitive answer feels right, and AI is prone to the same snap judgments as people. Checking a result against every condition in the problem is the habit that catches this."
+  },
+  {
+    "category": "reasoning",
+    "categoryLabel": "Flawed Reasoning",
+    "aiResponse": "The test is 95% accurate and your result came back positive, so there is a 95% chance that you have the disease.",
+    "question": "What is missing from this reasoning?",
+    "options": [
+      {
+        "text": "The base rate: for a rare disease, most positives are false alarms.",
+        "correct": true
+      },
+      {
+        "text": "No real medical test is accurate enough to reach 95%."
+      },
+      {
+        "text": "A positive result should always be retested three times first."
+      },
+      {
+        "text": "Accuracy measures the lab's confidence, not how the test performs."
+      }
+    ],
+    "explanation": "Suppose 1 in 1,000 people has the disease. Out of 1,000 tests, about 1 true positive appears next to roughly 50 false ones, so a positive means about a 2% chance. Test accuracy and the chance you are sick are different numbers."
+  },
+  {
+    "category": "overconfidence",
+    "categoryLabel": "Overconfidence",
+    "aiResponse": "The stock market will definitely rise 15 to 20% next year. Inflation is cooling, rates are stabilizing, and spending is strong. This outcome is a near certainty.",
+    "question": "What is the problem with this response?",
+    "options": [
+      {
+        "text": "It claims certainty about a system nobody can predict.",
+        "correct": true
+      },
+      {
+        "text": "Inflation and interest rates have no effect on stock prices."
+      },
+      {
+        "text": "It gives a range instead of a single exact number."
+      },
+      {
+        "text": "It should name which index the forecast refers to."
+      }
+    ],
+    "explanation": "Even professional forecasters miss market moves constantly. Words like \"definitely\" and \"near certainty\" are the warning sign. The indicators it lists are real, but they do not make the outcome certain."
+  },
+  {
+    "category": "overconfidence",
+    "categoryLabel": "Overconfidence",
+    "aiResponse": "Based on your fatigue and persistent headaches, you almost certainly have iron deficiency anemia. Start taking iron supplements immediately.",
+    "question": "What is the core problem with this response?",
+    "options": [
+      {
+        "text": "Many conditions fit these symptoms, and it skips testing first.",
+        "correct": true
+      },
+      {
+        "text": "Iron deficiency cannot cause fatigue or headaches, so it is wrong."
+      },
+      {
+        "text": "Iron supplements are never safe to take without a prescription."
+      },
+      {
+        "text": "It should have asked your age and sex before answering."
+      }
+    ],
+    "explanation": "Fatigue and headaches fit dozens of conditions. Iron deficiency can cause them, so the claim is plausible, which is exactly why the confidence is risky. Taking iron without testing can also be harmful for some people."
+  },
+  {
+    "category": "overconfidence",
+    "categoryLabel": "Overconfidence",
+    "aiResponse": "You can legally break your lease without any penalty because your landlord was slow fixing the heater. I am sure of this.",
+    "question": "What is the problem?",
+    "options": [
+      {
+        "text": "Tenant law varies by place and lease, so a flat guarantee is unreliable.",
+        "correct": true
+      },
+      {
+        "text": "Heating repairs are never the landlord's responsibility."
+      },
+      {
+        "text": "Leases can only be ended by mutual agreement, never by the tenant alone."
+      },
+      {
+        "text": "It should have said 'likely', since most landlords agree to this."
+      }
+    ],
+    "explanation": "Some places do allow a tenant to terminate over serious, unresolved habitability issues, with notice requirements and conditions that vary. The AI does not know your lease or your jurisdiction, and \"I am sure\" covers for that."
+  },
+  {
+    "category": "overconfidence",
+    "categoryLabel": "Overconfidence",
+    "aiResponse": "Quantum computers will break all current encryption by 2028. Every business should switch its security this year.",
+    "question": "What is the issue with this prediction?",
+    "options": [
+      {
+        "text": "A precise date for shaky tech, and post-quantum encryption exists.",
+        "correct": true
+      },
+      {
+        "text": "Quantum computers do not exist in any form, so this cannot happen."
+      },
+      {
+        "text": "Current encryption was already broken in 2020, so the date is wrong."
+      },
+      {
+        "text": "2028 is too far in the future for anyone to make a prediction."
+      }
+    ],
+    "explanation": "Experts debate when, or whether, large-scale quantum computers will arrive, and standards bodies have already published post-quantum algorithms. A confident date from an AI is a guess dressed as a fact."
+  },
+  {
+    "category": "overconfidence",
+    "categoryLabel": "Overconfidence",
+    "aiResponse": "Here is the function. It is guaranteed to be thread-safe and bug-free.",
+    "question": "What should you do with this claim?",
+    "options": [
+      {
+        "text": "Treat the guarantee as a red flag; the AI can't run code.",
+        "correct": true
+      },
+      {
+        "text": "Accept it, since AI-written code is checked by the compiler first."
+      },
+      {
+        "text": "Ask the AI to confirm and accept the answer if it agrees."
+      },
+      {
+        "text": "Rewrite it in a safer language, since the language is the issue."
+      }
+    ],
+    "explanation": "A model predicts plausible code. It does not run it or prove anything about it. Compilers catch syntax errors, not race conditions. Asking the same model again just gets you the same confidence."
+  },
+  {
+    "category": "overconfidence",
+    "categoryLabel": "Overconfidence",
+    "aiResponse": "I checked the restaurant's hours: it is open until 11 pm tonight, so you have plenty of time.",
+    "question": "What is the concern?",
+    "options": [
+      {
+        "text": "It can't have checked live hours without web access, so call to confirm.",
+        "correct": true
+      },
+      {
+        "text": "Restaurants rarely stay open past 10 pm, so the hours must be wrong."
+      },
+      {
+        "text": "Hours on map apps are always unreliable, so no one should trust them."
+      },
+      {
+        "text": "It should have said what the restaurant serves as well as when."
+      }
+    ],
+    "explanation": "Models sometimes describe actions they could not have taken, such as looking something up. Confident claims about current facts are worth a quick check with the source."
+  },
+  {
+    "category": "incomplete",
+    "categoryLabel": "Missing Context",
+    "aiResponse": "Coffee is bad for your health. It raises blood pressure, disrupts sleep, and causes anxiety. You should avoid it.",
+    "question": "What is missing from this response?",
+    "options": [
+      {
+        "text": "Nuance. Effects vary by dose and person, and moderate intake is often fine.",
+        "correct": true
+      },
+      {
+        "text": "Coffee does not actually contain caffeine, so the effects are overstated."
+      },
+      {
+        "text": "It should recommend a specific brand of coffee to be useful."
+      },
+      {
+        "text": "It leaves out the history of how coffee spread around the world."
+      }
+    ],
+    "explanation": "Each claim has some truth, and heavy intake or sensitivity to caffeine can cause real problems. The flaw is the blanket verdict: dose and individual variation are left out, and so is the evidence pointing the other way."
+  },
+  {
+    "category": "incomplete",
+    "categoryLabel": "Missing Context",
+    "aiResponse": "Put all your savings into an S&P 500 index fund. It always goes up in the long run.",
+    "question": "What does this advice leave out?",
+    "options": [
+      {
+        "text": "Your time horizon, your emergency fund, and years-long market drops.",
+        "correct": true
+      },
+      {
+        "text": "Index funds charge fees that are too high to be worth owning."
+      },
+      {
+        "text": "Individuals can't buy index funds directly, only through advisers."
+      },
+      {
+        "text": "It should have pushed individual stocks, which beat index funds."
+      }
+    ],
+    "explanation": "Broad index investing is common and defensible, and that is why this answer sounds fine. But \"always\" hides long drawdowns, and putting all savings in one place skips questions about when you need the money."
+  },
+  {
+    "category": "incomplete",
+    "categoryLabel": "Missing Context",
+    "aiResponse": "The Industrial Revolution improved life for everyone by making goods cheaper and creating jobs.",
+    "question": "What is missing?",
+    "options": [
+      {
+        "text": "The costs: dangerous factories, child labor, and gains that were uneven.",
+        "correct": true
+      },
+      {
+        "text": "It started in Germany, not Britain, so the history is off."
+      },
+      {
+        "text": "Goods became more expensive, so the claim about prices is backwards."
+      },
+      {
+        "text": "It should have named the inventor of the steam engine."
+      }
+    ],
+    "explanation": "Living standards did eventually rise, but \"everyone\" and the tidy success story skip a long, painful transition. One-sided summaries sound complete because nothing in them is false."
+  },
+  {
+    "category": "incomplete",
+    "categoryLabel": "Missing Context",
+    "aiResponse": "The best programming language is Python. You should use it for everything.",
+    "question": "What is wrong with this answer?",
+    "options": [
+      {
+        "text": "'Best' depends on what you're building, and it never asks.",
+        "correct": true
+      },
+      {
+        "text": "Python is too slow to count as best for any kind of work."
+      },
+      {
+        "text": "Java should have been named instead, as it is more widely used."
+      },
+      {
+        "text": "Languages can't be compared, so any 'best' claim is wrong."
+      }
+    ],
+    "explanation": "Python is a strong choice for data work and scripting, and a weak one for things like mobile apps or tight real-time systems. A single winner with no questions about your goal is a sign that context is missing."
+  },
+  {
+    "category": "incomplete",
+    "categoryLabel": "Missing Context",
+    "aiResponse": "Crime in the city rose 50% last year, so it has become much more dangerous.",
+    "question": "What is missing?",
+    "options": [
+      {
+        "text": "The actual counts. A 50% rise could mean 2 incidents became 3.",
+        "correct": true
+      },
+      {
+        "text": "The percentage should be rounded to the nearest 10 for clarity."
+      },
+      {
+        "text": "Crime figures can't be compared from one year to the next."
+      },
+      {
+        "text": "It should name which mayor was in office that year."
+      }
+    ],
+    "explanation": "A percentage change without a baseline can mean nothing or a lot. You also want the population, how crimes are counted, and the longer trend before calling a city dangerous."
+  },
+  {
+    "category": "incomplete",
+    "categoryLabel": "Missing Context",
+    "aiResponse": "You can visit Country X without a visa. Just show up with your passport.",
+    "question": "What is the problem with this answer?",
+    "options": [
+      {
+        "text": "It depends on your passport and stay, and rules change.",
+        "correct": true
+      },
+      {
+        "text": "A passport isn't enough anywhere, so a visa is always required."
+      },
+      {
+        "text": "Visas are only needed for stays over one year, worldwide."
+      },
+      {
+        "text": "It should have told you to book through a travel agent."
+      }
+    ],
+    "explanation": "Visa rules differ a lot by nationality, and they get updated. The answer might be correct for some travelers and wrong for you, which is exactly why a confident one-size reply is risky. Check the embassy or government site."
   }
 ];
+
+let QUESTIONS = [];
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Draw 2 questions per category, shuffle their order, and shuffle each
+// question's answers so the correct letter is random.
+function buildQuiz() {
+  const picked = [];
+  Object.keys(CATEGORY_LABELS).forEach((cat) => {
+    const inCat = QUESTION_POOL.filter((x) => x.category === cat);
+    picked.push(...shuffle(inCat).slice(0, 2));
+  });
+  QUESTIONS = shuffle(picked).map((x, i) => ({
+    ...x,
+    id: i + 1,
+    options: shuffle(x.options).map((o, k) => ({ ...o, letter: "ABCD"[k] })),
+  }));
+}
 
 const CATEGORY_META = {
   hallucination: { label: "Hallucinations",    color: "#f87171", icon: "🧠" },
@@ -194,6 +744,7 @@ let weakCats   = [];
 
 // ── Boot ───────────────────────────────────────────────────────
 document.getElementById("btn-start").addEventListener("click", () => {
+  buildQuiz();
   showScreen("screen-quiz");
   renderQuestion();
 });

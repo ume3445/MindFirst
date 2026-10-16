@@ -5,10 +5,10 @@ MindFirst is a suite of tools for people who want to use AI without becoming dep
 This repository contains three components that work independently.
 
 <p align="center">
-  <img src="docs/quiz.gif" alt="The AI literacy quiz: start screen, a question with an AI answer to critique, instant feedback, and the final score" width="760">
+  <img src="docs/extension-demo.gif" alt="The Try First extension intercepting a coding prompt on a ChatGPT-style page and asking for your own answer first; a simple factual question passes straight through" width="820">
 </p>
 
-*The AI literacy quiz from the website: spot the hallucination, the bias, the flawed reasoning.*
+*The Chrome extension in action: a reasoning prompt gets stopped and you are asked for your own answer first, while a plain factual question goes straight through. Recorded with the real, unmodified extension on a local stand-in for ChatGPT's page, with the classifier's reply stubbed, since the real site needs a login.*
 
 ---
 
@@ -26,11 +26,15 @@ The extension's hosted classifier is a small Cloudflare Worker, kept in a separa
 
 ## Website
 
+<p align="center">
+  <img src="docs/quiz.gif" alt="The AI literacy quiz: start screen, a question with an AI answer to critique, instant feedback, and the final score" width="760">
+</p>
+
 | Landing page | Score breakdown from the quiz |
 |---|---|
 | ![MindFirst landing page](docs/website-home.png) | ![Quiz results with a per-category score and recommendations](docs/quiz-results.png) |
 
-The quiz is 10 questions across five categories (hallucinations, bias detection, flawed reasoning, overconfidence, missing context). Each question shows an AI answer and asks you what is wrong with it, then explains why. Your results show a score per category plus tailored recommendations. The log page tracks AI sessions you enter by hand, and the roast page takes a ChatGPT, Claude, or Gemini conversation you paste in and gives you an honest read on how dependent you sound. The analysis runs entirely in your browser.
+The quiz draws 10 questions at random from a pool of 30, two from each of five categories (hallucinations, bias detection, flawed reasoning, overconfidence, missing context), with the answer order shuffled every time. Each question shows an AI answer and asks you what is wrong with it, then explains why. Your results show a score per category plus tailored recommendations. The log page tracks AI sessions you enter by hand, and the roast page takes a ChatGPT, Claude, or Gemini conversation you paste in and gives you an honest read on how dependent you sound. The analysis runs entirely in your browser.
 
 It is a plain static site with no build step.
 
@@ -45,6 +49,10 @@ npx serve .
 ## Chrome Extension
 
 The extension activates on ChatGPT, Claude, Gemini, Copilot, Perplexity, Poe, and Character.AI. When you press send, it classifies the prompt as a thinking task (writing, problem solving, analysis, anything with multiple steps) or a lookup task (a single factual question). Lookups go through untouched. Thinking tasks show a small popup asking you to attempt the answer yourself first, and your answered/skipped streak is tracked in the extension popup.
+
+<p align="center">
+  <img src="docs/extension-popup.png" alt="The extension's toolbar popup showing thinking ratio, streak, and recent activity" width="300">
+</p>
 
 ### Install
 
