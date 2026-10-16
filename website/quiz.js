@@ -292,24 +292,25 @@ function showResults() {
   showScreen("screen-results");
   window.scrollTo({ top: 0, behavior: "smooth" });
 
-  // Score ring animation
+  // Score ring animation (the ring SVG was removed from quiz.html, so skip if absent)
   const ring = document.getElementById("ring-fill");
-  const circumference = 327;
-  const offset = circumference - (score / 100) * circumference;
-
-  // Add gradient def to SVG
-  const svg = ring.closest("svg");
-  svg.innerHTML += `
+  if (ring) {
+    const circumference = 327;
+    const offset = circumference - (score / 100) * circumference;
+    const svg = ring.closest("svg");
+    if (svg) {
+      svg.innerHTML += `
     <defs>
       <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%"   stop-color="#7c5cfc"/>
         <stop offset="100%" stop-color="#34d399"/>
       </linearGradient>
     </defs>`;
-
-  setTimeout(() => {
-    ring.style.strokeDashoffset = offset;
-  }, 100);
+    }
+    setTimeout(() => {
+      ring.style.strokeDashoffset = offset;
+    }, 100);
+  }
 
   // Animate score number
   animateCounter(document.getElementById("score-num"), score, 1400);
